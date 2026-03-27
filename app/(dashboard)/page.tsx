@@ -54,7 +54,7 @@ const MOCK_ACTIVE_TALENTS = ALL_TALENTS.filter((t) =>
 
 export default function DashboardPage() {
   return (
-    <div className="w-full px-6 py-5 flex flex-col gap-4">
+    <div className="w-full px-8 pt-8 pb-6 flex flex-col gap-6">
       {/* Hero */}
       <HeroSection
         studentName={MOCK_STUDENT.name}

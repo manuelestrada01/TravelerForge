@@ -21,7 +21,7 @@ export default function Header({ activeSubject, studentName }: HeaderProps) {
     <header className="flex h-20 items-center justify-between border-b border-[#1e3320] bg-[#031706] px-6 shadow-[0_8px_20px_0px_rgba(0,0,0,0.6)]" style={{zIndex: 10, position: 'relative'}}>
       {/* Logo */}
       <div className="flex items-center gap-6">
-        <span className="font-serif text-lg font-semibold text-[#c9a227] tracking-tight">
+        <span className="font-serif text-xl font-semibold text-[#c9a227] tracking-tight" style={{ textShadow: "0 0 6px rgba(201,162,39,1), 0 0 16px rgba(201,162,39,0.85), 0 0 30px rgba(201,162,39,0.35)" }}>
           Visor Académico
         </span>
 

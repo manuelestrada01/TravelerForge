@@ -36,14 +36,14 @@ export default function HeroSection({ studentName, formativeClass }: HeroSection
 
       {/* Content */}
       <div className="relative z-10 w-full flex h-full flex-col justify-center px-6 py-10">
-        <p className="mb-3 text-sm font-medium uppercase tracking-[0.2em] text-[#9aab8a]">
+        <p className="mb-3 text-sm font-medium uppercase tracking-[0.2em] text-[#c9a227]/60">
           Bienvenido de vuelta, {classLabel}
         </p>
-        <h1 className="font-serif text-5xl font-bold leading-tight text-[#f5f0e8] max-w-2xl">
+        <h1 className="font-serif text-6xl font-normal leading-tight text-[#f5f0e8] max-w-2xl">
           Tu progreso en el nexo
           <br />
           técnico continúa,{" "}
-          <em className="text-[#c9a227] not-italic font-semibold">{studentName}.</em>
+          <em className="text-[#c9a227] not-italic font-normal">{studentName}.</em>
         </h1>
         <p className="mt-4 max-w-lg text-base leading-relaxed text-[#9aab8a]">
           {CLASS_HERO_TEXT[formativeClass]}
