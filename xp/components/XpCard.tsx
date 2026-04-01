@@ -67,14 +67,14 @@ export default function XpCard({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: "easeOut" }}
-      className="rounded-xl bg-[#0F2411] p-5 border border-[#1e3320]"
+      className="rounded-xl bg-[#0F2411] p-5 border border-[#1e3320] flex flex-col justify-center"
     >
-      {/* Header: label + XP value */}
-      <div className="flex items-start justify-between mb-1">
-        <p className="text-xs font-medium uppercase tracking-widest text-[#9aab8a]">
+      {/* Header: label centered + XP value right */}
+      <div className="relative flex items-center justify-center mb-1">
+        <p className="text-xs font-medium uppercase tracking-widest text-[#9aab8a] text-center">
           Resonancia de Experiencia
         </p>
-        <div className="text-right">
+        <div className="absolute right-0 text-right">
           <span className="font-serif text-2xl font-bold text-[#c9a227] tabular-nums">
             {formatXp(animatedXp)}
           </span>

@@ -53,7 +53,7 @@ export default function ActivityFeed({ entries }: ActivityFeedProps) {
       transition={{ duration: 0.45, delay: 0.1, ease: "easeOut" }}
       className="rounded-xl bg-[#0F2411] p-5 border border-[#1e3320]"
     >
-      <p className="mb-4 text-xs font-medium uppercase tracking-widest text-[#9aab8a]">
+      <p className="mb-4 text-xs font-medium uppercase tracking-widest text-[#9aab8a] text-center">
         Fragmentos de Actividad
       </p>
 
@@ -63,7 +63,7 @@ export default function ActivityFeed({ entries }: ActivityFeedProps) {
             Sin actividad reciente.
           </p>
         )}
-        {entries.map((entry, index) => {
+        {entries.slice(0, 4).map((entry, index) => {
           const Icon = EVENT_ICONS[entry.type];
           const iconClass = EVENT_ICON_COLORS[entry.type];
           const hasXp = entry.xpDelta !== undefined && entry.xpDelta !== 0;
@@ -78,29 +78,26 @@ export default function ActivityFeed({ entries }: ActivityFeedProps) {
                 duration: 0.35,
                 ease: "easeOut",
               }}
-              className="flex items-center gap-3 py-3 first:pt-0 last:pb-0"
+              className="flex items-center gap-2.5 py-2 first:pt-0 last:pb-0"
             >
-              {/* Icon */}
               <div
-                className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg ${iconClass}`}
+                className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-md ${iconClass}`}
               >
-                <Icon size={14} strokeWidth={1.5} />
+                <Icon size={12} strokeWidth={1.5} />
               </div>
 
-              {/* Text */}
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium text-[#f5f0e8] leading-tight">
+                <p className="text-xs font-medium text-[#f5f0e8] leading-tight truncate">
                   {entry.description}
                 </p>
                 <p className="mt-0.5 text-[10px] uppercase tracking-wider text-[#9aab8a]/70">
                   {formatRelativeTime(entry.timestamp)}
                   {entry.productionType && (
-                    <span className="ml-2">· {entry.productionType}</span>
+                    <span className="ml-1.5">· {entry.productionType}</span>
                   )}
                 </p>
               </div>
 
-              {/* XP delta */}
               {hasXp && (
                 <span
                   className={`flex-shrink-0 text-xs font-bold tabular-nums ${

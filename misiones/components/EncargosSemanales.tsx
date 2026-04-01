@@ -1,5 +1,12 @@
+"use client";
+
+import { useRef } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
 import { Mision } from "@/misiones/types";
 import { ChevronRight } from "lucide-react";
+
+gsap.registerPlugin(useGSAP);
 
 const ICON_MAP: Record<string, string> = {
   architecture: "architecture",
@@ -13,8 +20,28 @@ interface EncargosSemanalesProps {
 }
 
 export default function EncargosSemanales({ encargos }: EncargosSemanalesProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(
+    () => {
+      gsap.fromTo(
+        "[data-encargo]",
+        { opacity: 0, y: 18 },
+        {
+          opacity: 1,
+          y: 0,
+          stagger: 0.1,
+          duration: 0.4,
+          ease: "power3.out",
+          delay: 0.15,
+        }
+      );
+    },
+    { scope: containerRef }
+  );
+
   return (
-    <div className="bg-[#1a2e1c]/40 border border-[#424842]/10 p-8 rounded-lg">
+    <div ref={containerRef} className="bg-[#1a2e1c]/40 border border-[#424842]/10 p-8 rounded-lg">
       <div className="flex items-center gap-3 mb-8">
         <span className="material-symbols-outlined text-[#cabff9]">history_edu</span>
         <h3 className="font-serif text-xl text-[#f5f0e8]">Encargos Semanales</h3>
@@ -24,6 +51,7 @@ export default function EncargosSemanales({ encargos }: EncargosSemanalesProps) 
         {encargos.map((encargo) => (
           <div
             key={encargo.id}
+            data-encargo
             className="group flex items-start gap-4 p-4 hover:bg-[#8fbc8f]/5 transition-colors rounded cursor-pointer"
           >
             <div className="bg-[#243a25] text-[#cabff9] p-3 rounded">

@@ -3,6 +3,7 @@ import { getVisibleCourseIds, getCourseById, getCourseworkConfig } from "@/lib/s
 import { getAllDeliveriesForStudentByCourses, getStrikesForStudentByCourses } from "@/lib/supabase/game";
 import { getStudentGameStateByEmail } from "@/lib/supabase/game";
 import LaminasList from "@/laminas/components/LaminasList";
+import DashboardAnimatedWrapper from "@/dashboard/components/DashboardAnimatedWrapper";
 import type { Lamina, LaminaStatus } from "@/laminas/types";
 
 function mapStatus(s: "OK" | "LATE" | "MISSING" | "PENDING"): LaminaStatus {
@@ -58,7 +59,7 @@ export default async function LaminasPage() {
   }));
 
   return (
-    <div className="w-full px-6 py-6 flex flex-col gap-8">
+    <DashboardAnimatedWrapper>
       <div>
         <p className="mb-1 text-[10px] font-medium uppercase tracking-[0.2em] text-[#9aab8a]">
           Registro de Producción
@@ -72,6 +73,6 @@ export default async function LaminasPage() {
       </div>
 
       <LaminasList laminas={laminas} activeBimestre={activeBimestre} />
-    </div>
+    </DashboardAnimatedWrapper>
   );
 }

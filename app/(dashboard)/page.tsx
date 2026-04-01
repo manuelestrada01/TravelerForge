@@ -1,15 +1,15 @@
 import { auth } from "@/auth";
 import { getProfile } from "@/lib/supabase/profiles";
-import { getStudentGameStateByEmail, getDeliveriesByStudentEmail } from "@/lib/supabase/game";
+import { getStudentGameStateByEmail, getDeliveriesByStudentEmail, getStrikesForStudentByCourses, type Strike } from "@/lib/supabase/game";
 import { getTalentsForStudent } from "@/lib/supabase/teacher";
 import { getVisibleCourseIds } from "@/lib/supabase/courses";
 import { getFormativeClasses } from "@/lib/supabase/classes";
 import { getLevelRange, XP_THRESHOLDS } from "@/xp/engine";
 import HeroSection from "@/dashboard/components/HeroSection";
 import ActivityFeed from "@/dashboard/components/ActivityFeed";
+import VerseOfDay from "@/dashboard/components/VerseOfDay";
 import DashboardAnimatedWrapper from "@/dashboard/components/DashboardAnimatedWrapper";
-import XpCard from "@/xp/components/XpCard";
-import StrikesCard from "@/strikes/components/StrikesCard";
+import StatusBar from "@/dashboard/components/StatusBar";
 import TalentsCard from "@/talentos/components/TalentsCard";
 import ClassesSection from "@/clases-formativas/components/ClassesSection";
 import { ALL_TALENTS } from "@/talentos/types";
@@ -35,6 +35,7 @@ export default async function DashboardPage({
   let nextLevelName = "Fundamentos";
   let strikes = 0;
   let blocked = false;
+  let strikeDetails: Strike[] = [];
   let activity: ActivityEntry[] = [];
   let grantedTalentIds: string[] = [];
 
@@ -45,6 +46,9 @@ export default async function DashboardPage({
       getDeliveriesByStudentEmail(email, 5),
       getVisibleCourseIds(),
     ]);
+
+    const allStrikes = await getStrikesForStudentByCourses(email, visibleIds);
+    strikeDetails = allStrikes.filter((s) => s.active);
 
     const visibleGameStates = allGameStates.filter((s) => visibleIds.includes(s.course_id));
     const gameStates = courseId
@@ -99,23 +103,22 @@ export default async function DashboardPage({
     <DashboardAnimatedWrapper>
       <HeroSection studentName={studentName} classEntry={activeClassEntry} />
 
-      <div className="grid grid-cols-[3fr_1fr] gap-4">
-        <XpCard
-          xp={xp}
-          xpCurrentLevel={xpCurrentLevel}
-          xpNextLevel={xpNextLevel}
-          level={level}
-          levelName={levelName}
-          nextLevelName={nextLevelName}
-          studentName={studentName}
-          blocked={blocked}
-        />
-        <StrikesCard strikes={strikes} blocked={blocked} />
-      </div>
+      <StatusBar
+        xp={xp}
+        xpCurrentLevel={xpCurrentLevel}
+        xpNextLevel={xpNextLevel}
+        level={level}
+        levelName={levelName}
+        studentName={studentName}
+        blocked={blocked}
+        strikes={strikes}
+        strikeDetails={strikeDetails}
+      />
 
-      <div className="grid grid-cols-[2fr_3fr] gap-4">
+      <div className="grid grid-cols-3 gap-4">
         <ActivityFeed entries={activity} />
         <TalentsCard talents={talents} />
+        <VerseOfDay />
       </div>
 
       <ClassesSection activeClassSlug={formativeClassSlug} classes={publishedClasses} />

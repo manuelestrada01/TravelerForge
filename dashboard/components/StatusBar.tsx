@@ -1,0 +1,265 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { AlertTriangle, ShieldAlert, X } from "lucide-react";
+import type { Strike } from "@/lib/supabase/game";
+
+gsap.registerPlugin(useGSAP);
+
+// ─── Shared ────────────────────────────────────────────────────────────────
+
+const MAX_STRIKES = 3;
+
+const REASON_LABELS: Record<string, { label: string; color: string }> = {
+  no_submission:    { label: "No entrega",               color: "text-[#c0392b]" },
+  late_submission:  { label: "Entrega fuera de término", color: "text-[#c9a227]" },
+  missing_material: { label: "Falta de material",        color: "text-[#c9a227]" },
+};
+
+const STRIKE_MESSAGES: Record<number, string> = {
+  0: "Sin incumplimientos activos.",
+  1: "1/3 — Mantené la rectitud técnica.",
+  2: "2/3 — Un más bloqueará el bimestre.",
+  3: "3/3 — Bimestre bloqueado.",
+};
+
+function formatXp(v: number) { return v.toLocaleString("es-AR"); }
+function formatDate(iso: string) {
+  return new Date(iso).toLocaleDateString("es-AR", { day: "numeric", month: "short", year: "numeric" });
+}
+
+function easeOutCubic(t: number) { return 1 - Math.pow(1 - t, 3); }
+
+function useCountUp(target: number, duration = 1300) {
+  const [count, setCount] = useState(0);
+  const rafRef = useRef<number>(0);
+  useEffect(() => {
+    let startTime: number | null = null;
+    const step = (ts: number) => {
+      if (!startTime) startTime = ts;
+      const p = Math.min((ts - startTime) / duration, 1);
+      setCount(Math.floor(easeOutCubic(p) * target));
+      if (p < 1) rafRef.current = requestAnimationFrame(step);
+    };
+    rafRef.current = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [target, duration]);
+  return count;
+}
+
+// ─── Strikes Popup ─────────────────────────────────────────────────────────
+
+function StrikesPopup({ strikeDetails, onClose }: { strikeDetails: Strike[]; onClose: () => void }) {
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    gsap.timeline()
+      .fromTo(overlayRef.current, { opacity: 0 }, { opacity: 1, duration: 0.2, ease: "power2.out" })
+      .fromTo(cardRef.current, { opacity: 0, scale: 0.88, y: 24 }, { opacity: 1, scale: 1, y: 0, duration: 0.28, ease: "power3.out" }, "-=0.1");
+  }, { scope: overlayRef });
+
+  function handleClose() {
+    gsap.timeline({ onComplete: onClose })
+      .to(cardRef.current, { opacity: 0, scale: 0.88, y: 16, duration: 0.2, ease: "power2.in" })
+      .to(overlayRef.current, { opacity: 0, duration: 0.15, ease: "power2.in" }, "-=0.1");
+  }
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") handleClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  return (
+    <div ref={overlayRef} className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4" onClick={handleClose}>
+      <div ref={cardRef} className="relative w-full max-w-sm" onClick={(e) => e.stopPropagation()}>
+        <div className="pointer-events-none absolute -top-2 -left-2 h-8 w-8 border-t-2 border-l-2 border-[#c0392b]/50 rounded-tl-lg" />
+        <div className="pointer-events-none absolute -top-2 -right-2 h-8 w-8 border-t-2 border-r-2 border-[#c0392b]/50 rounded-tr-lg" />
+        <div className="pointer-events-none absolute -bottom-2 -left-2 h-8 w-8 border-b-2 border-l-2 border-[#c0392b]/50 rounded-bl-lg" />
+        <div className="pointer-events-none absolute -bottom-2 -right-2 h-8 w-8 border-b-2 border-r-2 border-[#c0392b]/50 rounded-br-lg" />
+        <button onClick={handleClose} className="absolute -top-4 -right-4 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-[#1e3320] bg-[#0d1a0f] text-[#9aab8a] transition-colors hover:border-[#c0392b]/40 hover:text-[#f5f0e8]">
+          <X size={14} />
+        </button>
+        <div className="relative flex flex-col overflow-hidden rounded-xl border border-[#c0392b]/30 bg-[#0d1a0f] p-6 shadow-[0_0_60px_rgba(0,0,0,0.8)]">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(192,57,43,0.05)_0%,transparent_70%)]" />
+          <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-32 h-px bg-gradient-to-r from-transparent via-[#c0392b]/40 to-transparent" />
+          <div className="relative flex flex-col items-center mb-5">
+            <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full border border-[#c0392b]/30 bg-[#c0392b]/10">
+              <ShieldAlert size={22} strokeWidth={1.4} className="text-[#c0392b]" />
+            </div>
+            <p className="text-[10px] font-medium uppercase tracking-[0.25em] text-[#9aab8a]/60">Registro de Incumplimientos</p>
+            <div className="mt-3 h-px w-16 bg-gradient-to-r from-transparent via-[#c0392b]/30 to-transparent" />
+          </div>
+          <div className="relative flex flex-col gap-2">
+            {strikeDetails.length === 0 ? (
+              <p className="text-xs text-[#9aab8a]/60 text-center py-4">Sin incumplimientos registrados.</p>
+            ) : strikeDetails.map((strike, i) => {
+              const reason = REASON_LABELS[strike.reason] ?? { label: strike.reason, color: "text-[#9aab8a]" };
+              return (
+                <div key={strike.id} className="flex items-start gap-3 rounded-lg border border-[#1e3320] bg-[#0F2411] p-3">
+                  <span className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded border border-[#c0392b]/40 bg-[#c0392b]/10 text-[10px] font-bold text-[#c0392b]">{i + 1}</span>
+                  <div className="flex-1 min-w-0">
+                    <p className={`text-xs font-semibold leading-tight ${reason.color}`}>{reason.label}</p>
+                    <p className="mt-0.5 text-[10px] text-[#9aab8a]/60 uppercase tracking-wider">{strike.bimestre} · {formatDate(strike.created_at)}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-32 h-px bg-gradient-to-r from-transparent via-[#c0392b]/40 to-transparent" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── StatusBar ─────────────────────────────────────────────────────────────
+
+interface StatusBarProps {
+  xp: number;
+  xpCurrentLevel: number;
+  xpNextLevel: number;
+  level: number;
+  levelName: string;
+  studentName: string;
+  blocked: boolean;
+  strikes: number;
+  strikeDetails: Strike[];
+}
+
+export default function StatusBar({
+  xp, xpCurrentLevel, xpNextLevel, level, studentName, blocked, strikes, strikeDetails,
+}: StatusBarProps) {
+  const [popupOpen, setPopupOpen] = useState(false);
+  const animatedXp = useCountUp(xp);
+  const clamped = Math.min(strikes, MAX_STRIKES);
+  const progress = Math.min(((xp - xpCurrentLevel) / (xpNextLevel - xpCurrentLevel)) * 100, 100);
+  const hasDetails = strikeDetails.length > 0;
+  const strikeMessage = STRIKE_MESSAGES[clamped] ?? STRIKE_MESSAGES[3];
+
+  return (
+    <>
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, ease: "easeOut" }}
+        className={`flex rounded-xl border overflow-hidden ${
+          blocked ? "bg-[#0F2411] border-[#c0392b]/30" : "bg-[#0F2411] border-[#1e3320]"
+        }`}
+      >
+        {/* ── XP section ── */}
+        <div className="flex flex-1 flex-col justify-center px-6 py-5">
+          {/* Title row */}
+          <div className="relative flex items-center justify-center mb-2">
+            <p className="text-xs font-medium uppercase tracking-widest text-[#9aab8a] text-center">
+              Resonancia de Experiencia
+            </p>
+            <div className="absolute right-0 flex items-baseline gap-1">
+              <span className="font-serif text-2xl font-bold text-[#c9a227] tabular-nums">
+                {formatXp(animatedXp)}
+              </span>
+              <span className="text-xs font-semibold uppercase tracking-wider text-[#9aab8a]">XP</span>
+            </div>
+          </div>
+
+          {/* Subtitle */}
+          <p className="mb-3 text-[10px] uppercase tracking-wider text-[#9aab8a]/70">
+            Nivel {level} · {studentName}
+            {blocked && <span className="ml-2 text-[#c0392b]">· Bimestre bloqueado</span>}
+          </p>
+
+          {/* Progress bar */}
+          <div className="relative h-2.5 w-full overflow-hidden rounded-full bg-[#0d1a0f]">
+            <motion.div
+              className={`h-full rounded-full ${blocked ? "bg-[#c0392b]/60" : "bg-gradient-to-r from-[#4a8f5a] via-[#8fbc8f] to-[#c9a227]"}`}
+              initial={{ width: 0 }}
+              animate={{ width: `${progress}%` }}
+              transition={{ duration: 1.3, delay: 0.25, ease: "easeOut" }}
+            />
+          </div>
+
+          {/* Bottom stats */}
+          <div className="mt-2.5 flex justify-between">
+            <p className="text-[10px] uppercase tracking-wider text-[#9aab8a]/70">
+              Siguiente hito: {formatXp(xpNextLevel)} XP
+            </p>
+            <p className="text-[10px] uppercase tracking-wider text-[#9aab8a]">
+              {Math.round(progress)}% Completado
+            </p>
+          </div>
+        </div>
+
+        {/* ── Divider ── */}
+        <div className="w-px bg-[#1e3320] my-4" />
+
+        {/* ── Strikes section ── */}
+        <div
+          onClick={() => hasDetails && setPopupOpen(true)}
+          className={`flex w-56 flex-col justify-center px-5 py-5 transition-colors ${
+            hasDetails ? "cursor-pointer hover:bg-[#c0392b]/5" : ""
+          }`}
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-xs font-medium uppercase tracking-widest text-[#9aab8a]">
+              Strikes
+            </p>
+            {clamped >= 2 && (
+              <motion.div animate={{ x: [0, -2, 2, -1, 0] }} transition={{ duration: 0.4, delay: 0.6 }}>
+                <AlertTriangle size={13} className="text-[#c9a227]" />
+              </motion.div>
+            )}
+          </div>
+
+          {/* Strike boxes */}
+          <div className="flex gap-1.5 mb-3">
+            {Array.from({ length: MAX_STRIKES }).map((_, i) => {
+              const isActive = i < clamped;
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={isActive ? {
+                    scale: 1, opacity: 1,
+                    boxShadow: ["0 0 0px rgba(192,57,43,0)", "0 0 8px rgba(192,57,43,0.55)", "0 0 0px rgba(192,57,43,0)"],
+                  } : { scale: 1, opacity: 1 }}
+                  transition={isActive ? {
+                    scale: { delay: i * 0.1, type: "spring", stiffness: 380, damping: 14 },
+                    boxShadow: { duration: 1.8, repeat: Infinity, ease: "easeInOut", delay: i * 0.2 },
+                  } : {
+                    scale: { delay: i * 0.1, duration: 0.3 },
+                    opacity: { delay: i * 0.1, duration: 0.3 },
+                  }}
+                  className={`flex h-10 flex-1 items-center justify-center rounded-md border text-sm font-bold ${
+                    isActive
+                      ? "border-[#c0392b] bg-[#c0392b]/20 text-[#c0392b]"
+                      : "border-[#1e3320] bg-[#0d1a0f]/60 text-[#1e3320]"
+                  }`}
+                >
+                  ✕
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* Message */}
+          <p className="text-[10px] leading-relaxed text-[#9aab8a]">{strikeMessage}</p>
+
+          {hasDetails && (
+            <p className="mt-1.5 text-[9px] uppercase tracking-wider text-[#c0392b]/50">
+              Toca para ver el detalle
+            </p>
+          )}
+        </div>
+      </motion.div>
+
+      {popupOpen && (
+        <StrikesPopup strikeDetails={strikeDetails} onClose={() => setPopupOpen(false)} />
+      )}
+    </>
+  );
+}

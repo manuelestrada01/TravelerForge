@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useRef } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { motion } from "framer-motion";
 import {
   Check,
   Axe,
@@ -15,6 +17,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import type { FormativeClassEntry } from "@/lib/supabase/classes";
+
+gsap.registerPlugin(useGSAP);
 
 const ATTRIBUTE_LABELS: Record<string, string> = {
   Fuerza: "FUERZA",
@@ -41,24 +45,83 @@ interface ClassesSectionProps {
 
 export default function ClassesSection({ activeClassSlug, classes }: ClassesSectionProps) {
   const [openClass, setOpenClass] = useState<FormativeClassEntry | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
   const [flipped, setFlipped] = useState(false);
 
-  if (classes.length === 0) return null;
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const popupRef = useRef<HTMLDivElement>(null);
 
-  function handleOpen(cls: FormativeClassEntry) {
+  useGSAP(
+    () => {
+      if (!overlayRef.current || !popupRef.current) return;
+
+      if (isOpen) {
+        gsap.set(overlayRef.current, { display: "flex" });
+
+        const tl = gsap.timeline();
+
+        // 1. Overlay fade in
+        tl.fromTo(overlayRef.current, { opacity: 0 }, { opacity: 1, duration: 0.22, ease: "none" });
+
+        // 2. Popup scales up from below with bounce
+        tl.fromTo(
+          popupRef.current,
+          { opacity: 0, scale: 0.82, y: 44 },
+          { opacity: 1, scale: 1, y: 0, duration: 0.55, ease: "back.out(1.6)" },
+          "-=0.1"
+        );
+
+        // 3. Corner ornaments pop in
+        tl.fromTo(
+          "[data-corner]",
+          { scale: 0, opacity: 0 },
+          { scale: 1, opacity: 1, stagger: 0.06, duration: 0.28, ease: "back.out(3)" },
+          "-=0.4"
+        );
+
+        // 4. Content elements stagger in
+        tl.fromTo(
+          "[data-el]",
+          { opacity: 0, y: 16 },
+          { opacity: 1, y: 0, stagger: 0.07, duration: 0.35, ease: "power3.out" },
+          "-=0.3"
+        );
+      } else if (openClass) {
+        const tl = gsap.timeline({
+          onComplete: () => {
+            setOpenClass(null);
+            setFlipped(false);
+            gsap.set(overlayRef.current!, { display: "none" });
+          },
+        });
+        tl.to(popupRef.current, { opacity: 0, scale: 0.9, y: 24, duration: 0.2, ease: "power2.in" });
+        tl.to(overlayRef.current, { opacity: 0, duration: 0.18, ease: "none" }, "-=0.1");
+      }
+    },
+    { scope: overlayRef, dependencies: [isOpen] }
+  );
+
+  function handleOpen(cls: FormativeClassEntry, e: React.MouseEvent) {
+    gsap
+      .timeline()
+      .to(e.currentTarget, { scale: 0.93, duration: 0.1, ease: "power2.in" })
+      .to(e.currentTarget, { scale: 1, duration: 0.4, ease: "back.out(2.5)" });
+
     setOpenClass(cls);
+    setIsOpen(true);
     setFlipped(false);
   }
 
   function handleClose() {
-    setOpenClass(null);
-    setFlipped(false);
+    setIsOpen(false);
   }
+
+  if (classes.length === 0) return null;
 
   return (
     <>
       <section className="pb-8">
-        {/* Section header — centered */}
+        {/* Section header */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -78,7 +141,7 @@ export default function ClassesSection({ activeClassSlug, classes }: ClassesSect
           </p>
         </motion.div>
 
-        {/* Cards — centered wrap */}
+        {/* Cards */}
         <div className="flex flex-wrap justify-center gap-4">
           {classes.map((cls, index) => {
             const isActive = cls.slug === activeClassSlug;
@@ -90,21 +153,15 @@ export default function ClassesSection({ activeClassSlug, classes }: ClassesSect
                 key={cls.slug}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  delay: 0.05 + index * 0.07,
-                  duration: 0.4,
-                  ease: "easeOut",
-                }}
+                transition={{ delay: 0.05 + index * 0.07, duration: 0.4, ease: "easeOut" }}
                 whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => handleOpen(cls)}
+                onClick={(e) => handleOpen(cls, e)}
                 className={`relative flex w-[200px] cursor-pointer flex-col overflow-hidden rounded-xl border p-4 transition-colors ${
                   isActive
                     ? "border-[#c9a227]/60 bg-[#c9a227]/10"
                     : "border-[#1e3320] bg-[#0F2411] hover:border-[#8fbc8f]/30"
                 }`}
               >
-                {/* Watermark icon */}
                 <ClassIcon
                   size={80}
                   strokeWidth={1}
@@ -112,32 +169,24 @@ export default function ClassesSection({ activeClassSlug, classes }: ClassesSect
                     isActive ? "text-[#c9a227]/15 scale-110" : "text-[#9aab8a]/10"
                   }`}
                 />
-
-                {/* Active badge */}
                 {isActive && (
                   <span className="absolute top-2 right-2 flex items-center gap-1 rounded-full bg-[#c9a227]/20 px-1.5 py-0.5 text-[9px] font-semibold text-[#c9a227]">
                     <Check size={8} strokeWidth={3} />
                     ACTIVA
                   </span>
                 )}
-
-                {/* Attribute tags */}
                 <div className="relative mb-3 flex flex-wrap gap-1">
                   {[attr1, attr2].filter(Boolean).map((attr) => (
                     <span
                       key={attr}
                       className={`rounded px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider ${
-                        isActive
-                          ? "bg-[#c9a227]/20 text-[#c9a227]"
-                          : "bg-[#1e3320] text-[#9aab8a]"
+                        isActive ? "bg-[#c9a227]/20 text-[#c9a227]" : "bg-[#1e3320] text-[#9aab8a]"
                       }`}
                     >
                       {ATTRIBUTE_LABELS[attr] ?? attr}
                     </span>
                   ))}
                 </div>
-
-                {/* Name + inspiration */}
                 <div className="relative mb-2">
                   <div className="flex items-center gap-2 mb-0.5">
                     <ClassIcon
@@ -157,8 +206,6 @@ export default function ClassesSection({ activeClassSlug, classes }: ClassesSect
                     {cls.inspiration}
                   </p>
                 </div>
-
-                {/* Description preview */}
                 <p className="relative flex-1 text-[11px] leading-relaxed text-[#9aab8a] line-clamp-3">
                   {cls.description}
                 </p>
@@ -168,73 +215,55 @@ export default function ClassesSection({ activeClassSlug, classes }: ClassesSect
         </div>
       </section>
 
-      {/* Popup */}
-      <AnimatePresence>
-        {openClass && (
-          <motion.div
-            key="popup-overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4"
+      {/* Popup overlay — always in DOM, GSAP controls visibility */}
+      <div
+        ref={overlayRef}
+        style={{ display: "none" }}
+        className="fixed inset-0 z-50 items-center justify-center bg-black/75 backdrop-blur-sm p-4"
+        onClick={handleClose}
+      >
+        <div
+          ref={popupRef}
+          onClick={(e) => e.stopPropagation()}
+          className="relative w-full max-w-sm"
+        >
+          {/* Corner ornaments */}
+          <div data-corner className="pointer-events-none absolute -top-2 -left-2 h-8 w-8 border-t-2 border-l-2 border-[#c9a227]/60 rounded-tl-lg" />
+          <div data-corner className="pointer-events-none absolute -top-2 -right-2 h-8 w-8 border-t-2 border-r-2 border-[#c9a227]/60 rounded-tr-lg" />
+          <div data-corner className="pointer-events-none absolute -bottom-2 -left-2 h-8 w-8 border-b-2 border-l-2 border-[#c9a227]/60 rounded-bl-lg" />
+          <div data-corner className="pointer-events-none absolute -bottom-2 -right-2 h-8 w-8 border-b-2 border-r-2 border-[#c9a227]/60 rounded-br-lg" />
+
+          {/* Close button */}
+          <button
             onClick={handleClose}
+            className="absolute -top-4 -right-4 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-[#1e3320] bg-[#0d1a0f] text-[#9aab8a] transition-colors hover:border-[#c9a227]/40 hover:text-[#f5f0e8]"
           >
-            <motion.div
-              key="popup-content"
-              initial={{ opacity: 0, scale: 0.88, y: 24 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.88, y: 24 }}
-              transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-              onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-sm"
-            >
-              {/* Decorative corner ornaments */}
-              <div className="pointer-events-none absolute -top-2 -left-2 h-8 w-8 border-t-2 border-l-2 border-[#c9a227]/60 rounded-tl-lg" />
-              <div className="pointer-events-none absolute -top-2 -right-2 h-8 w-8 border-t-2 border-r-2 border-[#c9a227]/60 rounded-tr-lg" />
-              <div className="pointer-events-none absolute -bottom-2 -left-2 h-8 w-8 border-b-2 border-l-2 border-[#c9a227]/60 rounded-bl-lg" />
-              <div className="pointer-events-none absolute -bottom-2 -right-2 h-8 w-8 border-b-2 border-r-2 border-[#c9a227]/60 rounded-br-lg" />
+            <X size={14} />
+          </button>
 
-              {/* Close button */}
-              <button
-                onClick={handleClose}
-                className="absolute -top-4 -right-4 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-[#1e3320] bg-[#0d1a0f] text-[#9aab8a] transition-colors hover:border-[#c9a227]/40 hover:text-[#f5f0e8]"
+          {/* Flip card — only render when there's a class to show */}
+          {openClass && (
+            <div className="relative" style={{ perspective: "1200px", height: "420px" }}>
+              <motion.div
+                animate={{ rotateY: flipped ? 180 : 0 }}
+                transition={{ duration: 0.55, ease: [0.4, 0, 0.2, 1] }}
+                style={{ transformStyle: "preserve-3d", position: "relative", height: "100%" }}
               >
-                <X size={14} />
-              </button>
-
-              {/* Flip card container */}
-              <div
-                className="relative"
-                style={{ perspective: "1200px", height: "420px" }}
-              >
-                <motion.div
-                  animate={{ rotateY: flipped ? 180 : 0 }}
-                  transition={{ duration: 0.55, ease: [0.4, 0, 0.2, 1] }}
-                  style={{ transformStyle: "preserve-3d", position: "relative", height: "100%" }}
-                >
-                  {/* FRONT FACE */}
-                  <CardFace backface={false}>
-                    <ClassCardFront
-                      cls={openClass}
-                      isActive={openClass.slug === activeClassSlug}
-                      onFlip={() => setFlipped(true)}
-                    />
-                  </CardFace>
-
-                  {/* BACK FACE */}
-                  <CardFace backface={true}>
-                    <ClassCardBack
-                      cls={openClass}
-                      onFlip={() => setFlipped(false)}
-                    />
-                  </CardFace>
-                </motion.div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                <CardFace backface={false}>
+                  <ClassCardFront
+                    cls={openClass}
+                    isActive={openClass.slug === activeClassSlug}
+                    onFlip={() => setFlipped(true)}
+                  />
+                </CardFace>
+                <CardFace backface={true}>
+                  <ClassCardBack cls={openClass} onFlip={() => setFlipped(false)} />
+                </CardFace>
+              </motion.div>
+            </div>
+          )}
+        </div>
+      </div>
     </>
   );
 }
@@ -276,15 +305,14 @@ function ClassCardFront({
 
   return (
     <div className="relative flex h-full flex-col overflow-hidden rounded-xl border border-[#1e3320] bg-[#0d1a0f] p-6 shadow-[0_0_60px_rgba(0,0,0,0.8)]">
-      {/* Background watermark */}
       <ClassIcon
         size={200}
         strokeWidth={0.5}
         className="absolute -bottom-8 -right-8 pointer-events-none text-[#9aab8a]/5"
       />
 
-      {/* Header row */}
-      <div className="relative mb-4 flex items-start justify-between">
+      {/* Header */}
+      <div data-el className="relative mb-4 flex items-start justify-between">
         <div className="flex items-center gap-3">
           <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${isActive ? "bg-[#c9a227]/20" : "bg-[#1e3320]"}`}>
             <ClassIcon size={22} strokeWidth={1.5} className={isActive ? "text-[#c9a227]" : "text-[#9aab8a]"} />
@@ -307,10 +335,10 @@ function ClassCardFront({
       </div>
 
       {/* Divider */}
-      <div className="relative mb-4 h-px bg-gradient-to-r from-transparent via-[#c9a227]/30 to-transparent" />
+      <div data-el className="relative mb-4 h-px bg-gradient-to-r from-transparent via-[#c9a227]/30 to-transparent" />
 
       {/* Attributes */}
-      <div className="relative mb-4 flex gap-2">
+      <div data-el className="relative mb-4 flex gap-2">
         {[attr1, attr2].filter(Boolean).map((attr) => (
           <span
             key={attr}
@@ -322,12 +350,12 @@ function ClassCardFront({
       </div>
 
       {/* Description */}
-      <p className="relative flex-1 text-[13px] leading-relaxed text-[#9aab8a]">
+      <p data-el className="relative flex-1 text-[13px] leading-relaxed text-[#9aab8a]">
         {cls.description}
       </p>
 
       {/* Footer */}
-      <div className="relative mt-4 flex items-center gap-2">
+      <div data-el className="relative mt-4 flex items-center gap-2">
         <button
           onClick={onFlip}
           className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-[#c9a227]/30 bg-[#c9a227]/10 py-2.5 text-xs font-medium text-[#c9a227] transition-colors hover:bg-[#c9a227]/20"
@@ -351,26 +379,18 @@ function ClassCardBack({
 
   return (
     <div className="relative flex h-full flex-col items-center justify-center overflow-hidden rounded-xl border border-[#c9a227]/30 bg-[#0d1a0f] p-6 shadow-[0_0_60px_rgba(0,0,0,0.8)] text-center">
-      {/* Background glow */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(201,162,39,0.06)_0%,transparent_70%)]" />
-
-      {/* Top ornament */}
       <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-32 h-px bg-gradient-to-r from-transparent via-[#c9a227]/50 to-transparent" />
 
-      {/* Icon */}
       <div className="relative mb-5 flex h-14 w-14 items-center justify-center rounded-full border border-[#c9a227]/30 bg-[#c9a227]/10">
         <ClassIcon size={28} strokeWidth={1.2} className="text-[#c9a227]" />
       </div>
 
-      {/* Class title */}
       <p className="relative mb-1 text-[10px] font-medium uppercase tracking-[0.25em] text-[#9aab8a]/60">
         {cls.title}
       </p>
-
-      {/* Divider */}
       <div className="relative mb-5 mt-2 h-px w-16 bg-gradient-to-r from-transparent via-[#c9a227]/40 to-transparent" />
 
-      {/* Verse */}
       <blockquote className="relative mb-4 flex-1 flex flex-col items-center justify-center">
         <p className="font-serif text-base leading-relaxed text-[#f5f0e8] italic">
           "{cls.verse_text ?? "Versículo no configurado."}"
@@ -382,10 +402,8 @@ function ClassCardBack({
         )}
       </blockquote>
 
-      {/* Bottom ornament */}
       <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-32 h-px bg-gradient-to-r from-transparent via-[#c9a227]/50 to-transparent" />
 
-      {/* Flip back */}
       <button
         onClick={onFlip}
         className="relative mt-4 flex items-center gap-2 rounded-lg border border-[#1e3320] bg-[#1a2e1c] px-4 py-2.5 text-xs font-medium text-[#9aab8a] transition-colors hover:border-[#c9a227]/40 hover:text-[#c9a227]"

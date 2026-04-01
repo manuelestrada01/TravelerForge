@@ -18,39 +18,41 @@ export default function ProgresoSidebar({
   const pct = total > 0 ? Math.round((completadas / total) * 100) : 0;
 
   return (
-    <div className="bg-[#1a2e1c]/60 backdrop-blur-md p-6 rounded-lg border border-[#424842]/20 flex flex-col gap-6">
-      {/* Barra de progreso */}
-      <div>
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-[10px] uppercase tracking-widest text-[#c9a227]">
-            Progreso {bimestre}
-          </span>
-          <span className="font-serif italic text-[#c9a227] text-lg">{pct}%</span>
-        </div>
-        <div className="h-1.5 w-full bg-[#243a25] rounded-full overflow-hidden">
+    <div className="rounded-xl bg-[#0F2411] border border-[#1e3320] overflow-hidden">
+      {/* Header */}
+      <div className="px-5 py-4 border-b border-[#1e3320] flex items-center justify-between">
+        <p className="text-xs font-medium uppercase tracking-widest text-[#9aab8a]">
+          Progreso {bimestre}
+        </p>
+        <span className="font-serif italic text-[#c9a227] text-lg">{pct}%</span>
+      </div>
+
+      {/* Progress bar */}
+      <div className="px-5 py-4 border-b border-[#1e3320]">
+        <div className="h-2.5 w-full overflow-hidden rounded-full bg-[#0d1a0f]">
           <div
-            className="h-full bg-gradient-to-r from-[#cabff9] to-[#c9a227] shadow-[0_0_10px_rgba(201,162,39,0.4)] transition-all duration-700"
+            className="h-full bg-gradient-to-r from-[#4a8f5a] via-[#8fbc8f] to-[#c9a227] shadow-[0_0_8px_rgba(201,162,39,0.35)] transition-all duration-700"
             style={{ width: `${pct}%` }}
           />
         </div>
-        <p className="text-[11px] text-[#9aab8a] mt-2">
+        <p className="text-[11px] text-[#9aab8a]/70 mt-2">
           {completadas} de {total} misiones completadas
         </p>
       </div>
 
-      {/* Stats rápidos */}
-      <div className="grid grid-cols-3 gap-3 pt-4 border-t border-[#424842]/20">
-        <div className="text-center">
+      {/* Stats */}
+      <div className="grid grid-cols-3 divide-x divide-[#1e3320]">
+        <div className="px-4 py-4 text-center">
           <p className="font-serif text-xl text-[#c9a227]">
             {xpTotal.toLocaleString("es-AR")}
           </p>
           <p className="text-[9px] uppercase tracking-widest text-[#9aab8a] mt-0.5">XP</p>
         </div>
-        <div className="text-center">
+        <div className="px-4 py-4 text-center">
           <p className="font-serif text-xl text-[#8fbc8f]">{nivel}</p>
           <p className="text-[9px] uppercase tracking-widest text-[#9aab8a] mt-0.5">Nivel</p>
         </div>
-        <div className="text-center">
+        <div className="px-4 py-4 text-center">
           <p
             className={`font-serif text-xl ${
               strikesActivos >= 3
