@@ -246,7 +246,7 @@ export default function CharacterSheet({
             </div>
 
             <div className="flex flex-col justify-center gap-3 p-6 flex-1">
-              <p className="text-[10px] font-medium uppercase tracking-widest text-[#9aab8a]/50 mb-1">
+              <p className="text-[10px] font-medium uppercase tracking-widest text-[#9aab8a]/50 mb-1 text-center">
                 Atributos
               </p>
               {ATTRIBUTES.map((attr) => {
@@ -285,10 +285,10 @@ export default function CharacterSheet({
 
           {talents.length > 0 && (
             <div className="relative border-t border-[#1e3320] px-6 py-4">
-              <p className="text-[10px] font-medium uppercase tracking-widest text-[#9aab8a]/50 mb-3">
+              <p className="text-[10px] font-medium uppercase tracking-widest text-[#9aab8a]/50 mb-3 text-center">
                 Talentos Activos
               </p>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 justify-center">
                 {talents.map((t) => (
                   <span
                     key={t.id}

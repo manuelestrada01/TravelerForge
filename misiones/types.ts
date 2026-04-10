@@ -6,6 +6,7 @@ export interface Mision {
   tipo: string;
   status: MisionStatus;
   xpReward: number;
+  xpBonus?: number;
   dueAt: Date | null;
   submittedAt?: Date;
 }

@@ -59,6 +59,7 @@ export default async function MisionesPage() {
       tipo,
       status,
       xpReward,
+      xpBonus: d.xp_bonus ?? 0,
       dueAt: d.due_at ? new Date(d.due_at) : null,
       submittedAt: d.submitted_at ? new Date(d.submitted_at) : undefined,
     };
@@ -77,7 +78,7 @@ export default async function MisionesPage() {
 
   return (
     <DashboardAnimatedWrapper>
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-4xl mx-auto flex flex-col gap-8">
       <header className="pb-6 border-b border-[#1e3320] text-center">
         <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-[#9aab8a] mb-1">
           Bimestre {activeBimestre}

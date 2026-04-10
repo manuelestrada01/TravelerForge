@@ -6,6 +6,7 @@ import gsap from "gsap";
 import { Mision } from "@/misiones/types";
 import { Check, AlertCircle, Clock, Trophy, Zap, ChevronDown, ChevronUp } from "lucide-react";
 
+
 gsap.registerPlugin(useGSAP);
 
 const VISIBLE_COUNT = 3;
@@ -75,7 +76,7 @@ export default function MisionesGrid({ pendientes, completadas, xpTotal, nivel, 
 
   const { contextSafe } = useGSAP(
     () => {
-      gsap.fromTo("[data-stat]", { opacity: 0, y: -8 }, { opacity: 1, y: 0, stagger: 0.06, duration: 0.35, ease: "power2.out", delay: 0.1 });
+      gsap.fromTo("[data-stat]", { opacity: 0 }, { opacity: 1, stagger: 0.06, duration: 0.35, ease: "power2.out", delay: 0.1 });
       gsap.fromTo("[data-mision='visible']", { opacity: 0, y: 20 }, { opacity: 1, y: 0, stagger: 0.1, duration: 0.45, ease: "power3.out", delay: 0.2 });
       gsap.fromTo("[data-card-completada]", { opacity: 0 }, { opacity: 1, stagger: 0.04, duration: 0.3, ease: "power2.out", delay: 0.45 });
     },
@@ -107,11 +108,11 @@ export default function MisionesGrid({ pendientes, completadas, xpTotal, nivel, 
     <div ref={containerRef} className="flex flex-col gap-8">
 
       {/* ── Stats strip ── */}
-      <div className="rounded-xl border border-[#1e3320] bg-[#0F2411] px-6 py-4 flex items-center gap-6">
+      <div className="rounded-xl ring-1 ring-[#1e3320] bg-[#0F2411] px-6 py-4 flex items-center gap-6 overflow-hidden">
         <div className="flex-1">
           <div className="flex items-center justify-between mb-1.5">
-            <p className="text-[9px] uppercase tracking-widest text-[#9aab8a]/60">Progreso del bimestre</p>
-            <p className="text-[9px] uppercase tracking-widest text-[#9aab8a]">{progressPct}%</p>
+            <p className="text-[11px] uppercase tracking-widest text-[#9aab8a]/60">Progreso del bimestre</p>
+            <p className="text-[11px] uppercase tracking-widest text-[#9aab8a]">{progressPct}%</p>
           </div>
           <div className="h-1.5 w-full rounded-full bg-[#0d1a0f] overflow-hidden">
             <div
@@ -129,8 +130,8 @@ export default function MisionesGrid({ pendientes, completadas, xpTotal, nivel, 
           { label: "Nivel", value: String(nivel), color: "text-[#8fbc8f]" },
         ].map(({ label, value, color }) => (
           <div key={label} data-stat className="text-center">
-            <p className="text-[9px] uppercase tracking-widest text-[#9aab8a]/60 mb-0.5">{label}</p>
-            <p className={`text-sm font-bold tabular-nums ${color}`}>{value}</p>
+            <p className="text-[11px] uppercase tracking-widest text-[#9aab8a]/60 mb-0.5">{label}</p>
+            <p className={`text-base font-bold tabular-nums ${color}`}>{value}</p>
           </div>
         ))}
       </div>
@@ -141,7 +142,7 @@ export default function MisionesGrid({ pendientes, completadas, xpTotal, nivel, 
           <Trophy size={15} className="text-[#c9a227]" />
           <h3 className="font-serif text-xl text-[#f5f0e8]">Misiones Activas</h3>
           {pendientes.length > 0 && (
-            <span className="ml-auto text-[10px] font-medium bg-[#c9a227]/10 text-[#c9a227] border border-[#c9a227]/20 px-2.5 py-0.5 rounded-full">
+            <span className="ml-auto text-xs font-medium bg-[#c9a227]/10 text-[#c9a227] border border-[#c9a227]/20 px-2.5 py-0.5 rounded-full">
               {pendientes.length} pendiente{pendientes.length !== 1 ? "s" : ""}
             </span>
           )}
@@ -170,7 +171,7 @@ export default function MisionesGrid({ pendientes, completadas, xpTotal, nivel, 
             {hasMore && (
               <button
                 onClick={handleToggle}
-                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg border border-[#1e3320] bg-[#0F2411] text-[11px] uppercase tracking-widest text-[#9aab8a] hover:text-[#c9a227] hover:border-[#c9a227]/30 transition-colors"
+                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg border border-[#1e3320] bg-[#0F2411] text-xs uppercase tracking-widest text-[#9aab8a] hover:text-[#c9a227] hover:border-[#c9a227]/30 transition-colors"
               >
                 {expanded ? (
                   <><ChevronUp size={13} strokeWidth={2} /> Ver menos</>
@@ -189,7 +190,7 @@ export default function MisionesGrid({ pendientes, completadas, xpTotal, nivel, 
           <div className="flex items-center gap-2 mb-3">
             <Check size={14} className="text-[#8fbc8f]" />
             <h3 className="font-serif text-lg text-[#9aab8a]">Completadas este bimestre</h3>
-            <span className="ml-auto text-[10px] text-[#9aab8a]/50 tabular-nums">
+            <span className="ml-auto text-xs text-[#9aab8a]/50 tabular-nums">
               {completadas.length} misión{completadas.length !== 1 ? "es" : ""}
             </span>
           </div>
@@ -207,16 +208,21 @@ export default function MisionesGrid({ pendientes, completadas, xpTotal, nivel, 
                   className={`flex items-center gap-3 px-5 py-3 group ${i !== completadas.length - 1 ? "border-b border-[#1e3320]" : ""}`}
                 >
                   <Check size={12} className="text-[#8fbc8f]/50 shrink-0" />
-                  <span className="text-[10px] uppercase tracking-wider font-semibold text-[#9aab8a]/40 shrink-0 w-8">{m.tipo}</span>
-                  <span className="text-sm text-[#f5f0e8]/50 truncate min-w-0">{m.title}</span>
+                  <span className="text-xs uppercase tracking-wider font-semibold text-[#9aab8a]/40 shrink-0 w-9">
+                    {m.tipo}
+                  </span>
+                  <span className="text-sm text-[#f5f0e8]/70 truncate min-w-0">{m.title}</span>
                   {/* Leader dots */}
                   <span className="flex-1 border-b border-dotted border-[#1e3320] group-hover:border-[#9aab8a]/20 transition-colors mx-2 mb-0.5 min-w-4" />
-                  {fechaEntrega && (
-                    <span className="text-[10px] text-[#9aab8a]/30 tabular-nums shrink-0">{fechaEntrega}</span>
-                  )}
+                  <span className="text-xs text-[#9aab8a]/40 tabular-nums shrink-0">{fechaEntrega ?? "—"}</span>
                   <div className="flex items-center gap-1 shrink-0 ml-3">
-                    <Zap size={10} className="text-[#8fbc8f]/40" />
-                    <span className="text-[11px] text-[#8fbc8f]/50 tabular-nums">+{m.xpReward.toLocaleString("es-AR")} XP</span>
+                    {(m.xpBonus ?? 0) > 0 && (
+                      <span className="flex items-center gap-0.5 text-[9px] text-[#c9a227]/70 bg-[#c9a227]/10 border border-[#c9a227]/20 px-1 py-0.5 rounded mr-1">
+                        <Zap size={8} className="text-[#c9a227]/70" />
+                        +{m.xpBonus} bonus
+                      </span>
+                    )}
+                    <span className="text-sm font-semibold text-[#c9a227] tabular-nums">+{m.xpReward.toLocaleString("es-AR")} XP</span>
                   </div>
                 </div>
               );

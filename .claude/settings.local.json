@@ -18,7 +18,9 @@
       "Bash(xargs grep:*)",
       "Read(//c/Users/jetsa/.claude/skills/gsap-core/**)",
       "Bash(ls -la \"/c/Users/jetsa/LevelUp/app/\\(dashboard\\)/\")",
-      "Bash(grep -r \"console.cloud.google\\\\|google-cloud\\\\|project_id\" /c/Users/jetsa/LevelUp --include=*.ts --include=*.tsx --include=*.json --include=*.md)"
+      "Bash(grep -r \"console.cloud.google\\\\|google-cloud\\\\|project_id\" /c/Users/jetsa/LevelUp --include=*.ts --include=*.tsx --include=*.json --include=*.md)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ]
   }
 }
