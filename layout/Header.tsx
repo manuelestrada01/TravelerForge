@@ -21,14 +21,24 @@ export default function Header({ courses, studentName, studentImage }: HeaderPro
   const activeCourseId = searchParams.get("courseId") ?? courses[0]?.id ?? "";
 
   return (
-    <header className="flex h-20 items-center justify-between border-b border-[#1e3320] bg-[#031706] px-6 shadow-[0_8px_20px_0px_rgba(0,0,0,0.6)]" style={{zIndex: 10, position: 'relative'}}>
+    <header
+      className="flex h-14 items-center justify-between border-b border-hud-border bg-hud-base/95 backdrop-blur-sm px-4"
+      style={{ zIndex: 10, position: "relative" }}
+    >
       {/* Logo */}
-      <div className="flex items-center gap-6">
-        <span className="font-serif text-xl font-semibold text-[#c9a227] tracking-tight" style={{ textShadow: "0 0 6px rgba(201,162,39,1), 0 0 16px rgba(201,162,39,0.85), 0 0 30px rgba(201,162,39,0.35)" }}>
+      <div className="flex items-center gap-4">
+        <span
+          className="font-serif text-base font-semibold text-gold tracking-tight gold-glow-sm select-none"
+        >
           Visor Académico
         </span>
 
-        {/* Course tabs */}
+        {/* Divider */}
+        {courses.length > 0 && (
+          <span className="h-4 w-px bg-hud-border" />
+        )}
+
+        {/* Course tabs — pill style */}
         <nav className="flex items-center gap-1">
           {courses.map(({ id, name }) => {
             const isActive = id === activeCourseId;
@@ -36,16 +46,13 @@ export default function Header({ courses, studentName, studentImage }: HeaderPro
               <Link
                 key={id}
                 href={`/?courseId=${id}`}
-                className={`relative px-3 py-4 text-xs font-medium transition-colors ${
+                className={`px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider transition-all duration-200 ${
                   isActive
-                    ? "text-[#c9a227]"
-                    : "text-[#9aab8a] hover:text-[#f5f0e8]"
+                    ? "bg-gold text-hud-base shadow-gold-glow-sm"
+                    : "text-sage hover:text-cream hover:bg-hud-card"
                 }`}
               >
                 {name}
-                {isActive && (
-                  <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#c9a227] rounded-t-full" />
-                )}
               </Link>
             );
           })}
@@ -53,15 +60,15 @@ export default function Header({ courses, studentName, studentImage }: HeaderPro
       </div>
 
       {/* Right side */}
-      <div className="flex items-center gap-3">
-        <button className="relative flex h-8 w-8 items-center justify-center rounded-lg text-[#9aab8a] hover:bg-[#1a2e1c] hover:text-[#f5f0e8] transition-colors">
-          <Bell size={16} strokeWidth={1.5} />
+      <div className="flex items-center gap-2">
+        <button className="relative flex h-7 w-7 items-center justify-center rounded text-sage hover:text-gold hover:bg-hud-card transition-colors">
+          <Bell size={15} strokeWidth={1.5} />
         </button>
-        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#c9a227]/20 border border-[#c9a227]/40 overflow-hidden">
+        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gold/20 border border-gold/40 overflow-hidden">
           {studentImage ? (
-            <Image src={studentImage} alt={studentName} width={32} height={32} className="h-full w-full object-cover" />
+            <Image src={studentImage} alt={studentName} width={28} height={28} className="h-full w-full object-cover" />
           ) : (
-            <span className="text-[#c9a227] text-sm font-semibold font-serif">
+            <span className="text-gold text-xs font-semibold font-serif">
               {studentName.charAt(0)}
             </span>
           )}

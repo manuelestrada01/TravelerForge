@@ -9,4 +9,6 @@ export interface Mision {
   xpBonus?: number;
   dueAt: Date | null;
   submittedAt?: Date;
+  icon?: string;
+  description?: string;
 }

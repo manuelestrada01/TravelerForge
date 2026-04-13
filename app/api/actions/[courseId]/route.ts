@@ -122,7 +122,7 @@ async function executeAction(opts: {
         course_id: courseId,
         student_email: studentEmail,
         type: "manual_xp",
-        notes: `Strike forzado: ${reason}`,
+        notes: `Strike forzado: ${strikeReason}`,
         value: null,
         created_by: createdBy,
       });

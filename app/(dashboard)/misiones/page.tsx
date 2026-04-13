@@ -79,13 +79,14 @@ export default async function MisionesPage() {
   return (
     <DashboardAnimatedWrapper>
       <div className="max-w-4xl mx-auto flex flex-col gap-8">
-      <header className="pb-6 border-b border-[#1e3320] text-center">
-        <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-[#9aab8a] mb-1">
-          Bimestre {activeBimestre}
+      <header className="pb-6 text-center">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-gold/60 mb-1">
+          ◆ Bimestre {activeBimestre} ◆
         </p>
-        <h1 className="font-serif text-4xl font-bold text-[#f5f0e8] tracking-tight">
+        <h1 className="font-serif text-4xl text-cream tracking-tight">
           Tablón de Misiones
         </h1>
+        <div className="mt-3 gold-divider w-32 mx-auto" />
       </header>
 
       <MisionesGrid

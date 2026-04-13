@@ -20,7 +20,7 @@ export async function syncCourse(
   courseId: string,
   accessToken: string,
   force = false
-): Promise<{ synced: boolean; studentCount: number }> {
+): Promise<{ synced: boolean; studentCount: number; strikesCreated?: number; strikesSkipped?: number; errors?: string[] }> {
   const course = await getCourseById(courseId);
   if (!course) throw new Error(`Course ${courseId} not found`);
 

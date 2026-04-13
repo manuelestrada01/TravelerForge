@@ -29,14 +29,15 @@ export default async function DistincionesPage() {
 
   return (
     <div className="w-full px-6 py-6 flex flex-col gap-8">
-      <div>
-        <p className="mb-1 text-[10px] font-medium uppercase tracking-[0.2em] text-[#9aab8a]">
-          Logros del Gremio
+      <div className="text-center">
+        <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-gold/60">
+          ◆ Logros del Gremio ◆
         </p>
-        <h1 className="font-serif text-3xl font-bold text-[#f5f0e8]">
+        <h1 className="font-serif text-3xl text-cream">
           Distinciones
         </h1>
-        <p className="mt-2 text-sm text-[#9aab8a] max-w-lg">
+        <div className="mt-3 gold-divider w-28 mx-auto mb-3" />
+        <p className="text-sm text-sage max-w-lg mx-auto">
           Insignias obtenidas a lo largo de tu recorrido. Cada distinción refleja un patrón de constancia, calidad o participación sostenida.
         </p>
       </div>

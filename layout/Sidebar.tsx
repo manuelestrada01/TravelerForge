@@ -6,12 +6,14 @@ import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import {
   LayoutDashboard,
-  Award,
+  Sword,
   BookOpen,
   Users,
-  GraduationCap,
+  Shield,
   LogOut,
+  GraduationCap,
 } from "lucide-react";
+
 interface SidebarProps {
   studentName: string;
   studentImage?: string | null;
@@ -21,69 +23,87 @@ interface SidebarProps {
 
 const NAV_ITEMS = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/misiones", label: "Quests/Misiones", icon: Award },
-  { href: "/laminas", label: "Library/Bitácora", icon: BookOpen },
-  { href: "/comunidad", label: "Community/Insignias", icon: Users },
-  { href: "/clases-formativas", label: "Clases Formativas", icon: GraduationCap },
+  { href: "/misiones", label: "Misiones", icon: Sword },
+  { href: "/laminas", label: "Láminas", icon: BookOpen },
+  { href: "/comunidad", label: "Comunidad", icon: Users },
+  { href: "/clases-formativas", label: "Clases Formativas", icon: Shield },
 ];
 
 export default function Sidebar({ studentName, studentImage, level, formativeClassTitle }: SidebarProps) {
   const pathname = usePathname();
 
   return (
-    <aside className="flex h-full w-[300px] flex-shrink-0 flex-col bg-[#031706] border-r border-[#1e3320]">
-      {/* Student profile */}
-      <div className="flex items-center gap-3 px-4 py-5">
-        <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-[#c9a227]/20 border border-[#c9a227]/30 overflow-hidden">
-          {studentImage ? (
-            <Image src={studentImage} alt={studentName} width={48} height={48} className="h-full w-full object-cover" />
-          ) : (
-            <GraduationCap size={24} strokeWidth={1.5} className="text-[#c9a227]" />
-          )}
+    <aside className="group flex h-full w-16 hover:w-[220px] flex-shrink-0 flex-col bg-hud-base border-r border-hud-border transition-all duration-300 ease-in-out overflow-hidden">
+
+      {/* Brand mark — only icon when collapsed */}
+      <div className="flex h-14 items-center px-4 border-b border-hud-border flex-shrink-0">
+        <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center octagon bg-gold/20">
+          <span className="text-gold text-xs font-bold font-serif">{level}</span>
         </div>
-        <div className="min-w-0">
-          <p className="text-sm font-semibold text-[#f5f0e8] leading-tight truncate">
-            {studentName}
-          </p>
-          <p className="text-[10px] mt-0.5 uppercase tracking-wide text-[#9aab8a]">
-            Nivel {level} · {formativeClassTitle}
-          </p>
+        <div className="ml-3 min-w-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+          <p className="text-[11px] font-semibold text-cream leading-tight truncate">{studentName}</p>
+          <p className="text-[9px] uppercase tracking-widest text-sage truncate">{formativeClassTitle}</p>
         </div>
       </div>
 
       {/* Navigation */}
-      <nav className="flex flex-col py-2 flex-1">
+      <nav className="flex flex-col py-3 flex-1">
         {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
           const isActive = pathname === href;
           return (
             <Link
               key={href}
               href={href}
-              className={`relative flex items-center gap-3 px-4 py-3.5 text-[11px] font-semibold uppercase tracking-widest transition-colors ${
+              title={label}
+              className={`relative flex items-center gap-3 px-4 py-3 transition-colors ${
                 isActive
-                  ? "bg-[#c9a227]/[0.12] text-[#c9a227]"
-                  : "text-[#9aab8a] hover:bg-[#1e3320] hover:text-[#f5f0e8]"
+                  ? "text-gold bg-gold/[0.08]"
+                  : "text-sage hover:text-cream hover:bg-hud-card/60"
               }`}
             >
-              {/* Active left border */}
+              {/* Active left indicator */}
               {isActive && (
-                <span className="absolute left-0 top-0 h-full w-1 bg-[#c9a227]" />
+                <span className="absolute left-0 top-1 bottom-1 w-[2px] bg-gold shadow-gold-glow-sm rounded-r-full" />
               )}
-              <Icon size={18} strokeWidth={1.5} className="flex-shrink-0" />
-              <span className="truncate">{label}</span>
+              <Icon
+                size={18}
+                strokeWidth={1.5}
+                className="flex-shrink-0"
+              />
+              <span className="text-[11px] font-semibold uppercase tracking-widest truncate opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                {label}
+              </span>
             </Link>
           );
         })}
       </nav>
 
-      {/* Logout */}
-      <div className="border-t border-[#1e3320] p-3">
+      {/* Avatar + Logout */}
+      <div className="border-t border-hud-border p-3 space-y-2">
+        {/* Avatar mini */}
+        <div className="flex items-center gap-3 px-1">
+          <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-gold/20 border border-gold/30 overflow-hidden">
+            {studentImage ? (
+              <Image src={studentImage} alt={studentName} width={32} height={32} className="h-full w-full object-cover" />
+            ) : (
+              <GraduationCap size={16} strokeWidth={1.5} className="text-gold" />
+            )}
+          </div>
+          <p className="text-[10px] text-sage uppercase tracking-widest truncate opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+            Nivel {level}
+          </p>
+        </div>
+
+        {/* Logout */}
         <button
           onClick={() => signOut({ callbackUrl: "/login" })}
-          className="flex w-full items-center gap-3 px-4 py-3 text-[11px] font-semibold uppercase tracking-widest text-[#9aab8a] transition-colors hover:bg-[#1e3320] hover:text-[#c0392b] rounded-lg"
+          title="Cerrar sesión"
+          className="flex w-full items-center gap-3 px-1 py-2 text-[11px] font-semibold uppercase tracking-widest text-sage transition-colors hover:text-danger rounded-sm"
         >
           <LogOut size={18} strokeWidth={1.5} className="flex-shrink-0" />
-          <span>Cerrar sesión</span>
+          <span className="truncate opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+            Cerrar sesión
+          </span>
         </button>
       </div>
     </aside>

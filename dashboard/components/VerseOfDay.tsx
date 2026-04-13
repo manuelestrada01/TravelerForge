@@ -87,42 +87,45 @@ export default async function VerseOfDay() {
   const verse = await fetchVerseOfDay();
 
   return (
-    <div className="relative flex flex-col items-center justify-center overflow-hidden rounded-xl border border-[#c9a227]/30 bg-[#0d1a0f] p-6 text-center">
+    <div className="hud-panel hud-panel-teal rune-corners relative flex flex-col items-center justify-center p-6 text-center h-full">
       {/* Radial glow */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(201,162,39,0.06)_0%,transparent_70%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,212,170,0.04)_0%,transparent_70%)]" />
 
-      {/* Top ornament */}
-      <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-32 h-px bg-gradient-to-r from-transparent via-[#c9a227]/50 to-transparent" />
+      {/* Top teal ornament line */}
+      <div className="pointer-events-none absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-teal/50 to-transparent" />
 
       {/* Icon */}
-      <div className="relative mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-[#c9a227]/30 bg-[#c9a227]/10">
-        <BookOpen size={24} strokeWidth={1.2} className="text-[#c9a227]" />
+      <div
+        className="relative mb-4 flex h-11 w-11 items-center justify-center bg-teal/10 border border-teal/30"
+        style={{ clipPath: "polygon(0 6px, 6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px))" }}
+      >
+        <BookOpen size={20} strokeWidth={1.2} className="text-teal" />
       </div>
 
       {/* Label */}
-      <p className="relative mb-1 text-[10px] font-medium uppercase tracking-[0.25em] text-[#9aab8a]/60">
+      <p className="relative mb-1 text-[10px] font-medium uppercase tracking-[0.25em] text-sage/60">
         Versículo del Día
       </p>
 
-      {/* Divider */}
-      <div className="relative mb-5 mt-2 h-px w-16 bg-gradient-to-r from-transparent via-[#c9a227]/40 to-transparent" />
+      {/* Gold divider */}
+      <div className="relative mb-5 mt-2 gold-divider w-16" />
 
       {/* Verse */}
       {verse ? (
         <blockquote className="relative flex flex-col items-center">
-          <p className="font-serif text-sm leading-relaxed text-[#f5f0e8] italic">
+          <p className="font-serif text-sm leading-relaxed text-cream italic">
             &ldquo;{verse.text}&rdquo;
           </p>
-          <cite className="mt-3 block text-[11px] not-italic text-[#c9a227]/80 tracking-wider">
+          <cite className="mt-3 block text-[11px] not-italic text-gold/80 tracking-wider">
             — {verse.reference}
           </cite>
         </blockquote>
       ) : (
-        <p className="text-xs text-[#9aab8a]/60">No disponible en este momento.</p>
+        <p className="text-xs text-sage/50">No disponible en este momento.</p>
       )}
 
       {/* Bottom ornament */}
-      <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-32 h-px bg-gradient-to-r from-transparent via-[#c9a227]/50 to-transparent" />
+      <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-20 gold-divider" />
     </div>
   );
 }

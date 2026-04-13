@@ -72,8 +72,8 @@ export default async function DashboardLayout({
     const formativeClassTitle = classEntry?.title ?? profile.formative_class;
 
     return (
-      <div className="flex h-screen flex-col overflow-hidden bg-[#031706]">
-        <Suspense fallback={<div className="h-20 border-b border-[#1e3320] bg-[#031706]" />}>
+      <div className="flex h-screen flex-col overflow-hidden bg-hud-base">
+        <Suspense fallback={<div className="h-14 border-b border-hud-border bg-hud-base" />}>
           <Header
             courses={courses.map((c) => ({ id: c.id, name: c.name }))}
             studentName={displayName}

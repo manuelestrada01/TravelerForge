@@ -17,7 +17,8 @@ const textContainer = {
 
 const textItem = {
   hidden: { opacity: 0, y: 22 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as any } },
 };
 
 export default function HeroSection({ studentName, classEntry }: HeroSectionProps) {
@@ -28,8 +29,8 @@ export default function HeroSection({ studentName, classEntry }: HeroSectionProp
 
   return (
     <div
-      className="relative w-full overflow-hidden rounded-xl border border-[#1e3320]"
-      style={{ minHeight: "400px" }}
+      className="relative w-full overflow-hidden scanlines"
+      style={{ minHeight: "220px", clipPath: "polygon(0 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%)" }}
     >
       {/* Background image — zoom-in on mount */}
       <motion.div
@@ -43,39 +44,55 @@ export default function HeroSection({ studentName, classEntry }: HeroSectionProp
         transition={{ duration: 2.8, ease: "easeOut" }}
       />
 
-      {/* Gradient overlays */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#031706]/80 via-[#031706]/40 to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#031706]/50 via-transparent to-transparent" />
+      {/* Dark overlays */}
+      <div className="absolute inset-0 bg-gradient-to-r from-hud-base/90 via-hud-base/60 to-hud-base/20" />
+      <div className="absolute inset-0 bg-gradient-to-t from-hud-base/70 via-transparent to-transparent" />
+
+      {/* Subtle gold radial in center */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_30%_50%,rgba(201,162,39,0.06)_0%,transparent_60%)]" />
+
+      {/* Corner rune ornaments */}
+      <div className="pointer-events-none absolute top-3 left-3 text-gold/40 text-[8px] leading-none">◆</div>
+      <div className="pointer-events-none absolute bottom-5 right-5 text-gold/30 text-[8px] leading-none">◆</div>
+
+      {/* Top gold line */}
+      <div className="pointer-events-none absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
 
       {/* Content */}
       <motion.div
-        className="relative z-10 w-full flex h-full flex-col justify-center px-6 py-10"
+        className="relative z-10 flex h-full flex-col justify-center px-8 py-8"
         variants={textContainer}
         initial="hidden"
         animate="show"
       >
+        {/* Class label */}
         <motion.p
           variants={textItem}
-          className="mb-3 text-sm font-medium uppercase tracking-[0.2em] text-[#c9a227]/60"
+          className="mb-2 text-[10px] font-semibold uppercase tracking-[0.25em] text-gold/60"
         >
-          Bienvenido de vuelta, {classLabel}
+          ◆ {classLabel} ◆
         </motion.p>
+
+        {/* Main heading */}
         <motion.h1
           variants={textItem}
-          className="font-serif text-6xl font-normal leading-tight text-[#f5f0e8] max-w-2xl"
+          className="font-serif text-5xl font-normal leading-tight text-cream max-w-2xl"
         >
-          Tu progreso en el nexo
-          <br />
-          técnico continúa,{" "}
-          <em className="text-[#c9a227] not-italic font-normal">{studentName}.</em>
+          Bienvenido,{" "}
+          <em className="not-italic gold-glow text-gold font-semibold">{studentName}.</em>
         </motion.h1>
+
+        {/* Description */}
         <motion.p
           variants={textItem}
-          className="mt-4 max-w-lg text-base leading-relaxed text-[#9aab8a]"
+          className="mt-3 max-w-md text-sm leading-relaxed text-sage"
         >
           {heroText}
         </motion.p>
       </motion.div>
+
+      {/* Bottom chamfer line */}
+      <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-hud-border to-transparent" />
     </div>
   );
 }

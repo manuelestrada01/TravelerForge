@@ -61,13 +61,14 @@ export default async function LaminasPage() {
   return (
     <DashboardAnimatedWrapper>
       <div>
-        <p className="mb-1 text-[10px] font-medium uppercase tracking-[0.2em] text-[#9aab8a]">
-          Registro de Producción
+        <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-gold/60">
+          ◆ Registro de Producción ◆
         </p>
-        <h1 className="font-serif text-3xl font-bold text-[#f5f0e8]">
+        <h1 className="font-serif text-3xl text-cream">
           Láminas & Entregas
         </h1>
-        <p className="mt-2 text-sm text-[#9aab8a] max-w-lg">
+        <div className="mt-3 gold-divider w-28 mb-3" />
+        <p className="text-sm text-sage max-w-lg">
           Historial de todas tus entregas del ciclo lectivo. El estado de cada producción determina tu XP y tu nivel de strikes activos.
         </p>
       </div>

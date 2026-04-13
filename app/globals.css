@@ -3,16 +3,161 @@
 @tailwind utilities;
 
 :root {
-  --font-playfair: "Playfair Display", Georgia, serif;
+  --font-eb-garamond: "EB Garamond", Georgia, serif;
   --font-inter: "Inter", system-ui, sans-serif;
 }
 
 body {
-  background-color: #0d1a0f;
-  color: #f5f0e8;
+  background-color: #080d0a;
+  color: #f0ebe0;
   font-family: var(--font-inter);
 }
 
 .material-symbols-outlined {
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+@layer components {
+  /* ── HUD Panel — chamfered corners with gradient border ── */
+  .hud-panel {
+    position: relative;
+    background: #131f14;
+    clip-path: polygon(0 12px, 12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.6), inset 0 1px 0 rgba(201,162,39,0.05);
+  }
+  .hud-panel::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    background: linear-gradient(
+      135deg,
+      rgba(201,162,39,0.55) 0%,
+      rgba(42,74,46,0.5) 25%,
+      rgba(42,74,46,0.4) 75%,
+      rgba(201,162,39,0.3) 100%
+    );
+    clip-path: polygon(0 12px, 12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
+    z-index: -1;
+  }
+
+  /* HUD panel variant — teal accent */
+  .hud-panel-teal::before {
+    background: linear-gradient(
+      135deg,
+      rgba(0,212,170,0.5) 0%,
+      rgba(42,74,46,0.4) 40%,
+      rgba(42,74,46,0.4) 60%,
+      rgba(0,212,170,0.25) 100%
+    );
+  }
+
+  /* HUD panel variant — danger accent */
+  .hud-panel-danger::before {
+    background: linear-gradient(
+      135deg,
+      rgba(229,62,62,0.6) 0%,
+      rgba(42,74,46,0.4) 40%,
+      rgba(42,74,46,0.4) 60%,
+      rgba(229,62,62,0.3) 100%
+    );
+  }
+
+  /* Small chamfer variant (8px) for compact elements */
+  .hud-panel-sm {
+    position: relative;
+    background: #131f14;
+    clip-path: polygon(0 8px, 8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+  }
+  .hud-panel-sm::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    background: linear-gradient(135deg, rgba(201,162,39,0.5) 0%, rgba(42,74,46,0.4) 50%, rgba(201,162,39,0.2) 100%);
+    clip-path: polygon(0 8px, 8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);
+    z-index: -1;
+  }
+
+  /* ── Gold glow text ── */
+  .gold-glow {
+    text-shadow:
+      0 0 6px rgba(201,162,39,1),
+      0 0 20px rgba(201,162,39,0.65),
+      0 0 40px rgba(201,162,39,0.25);
+  }
+  .gold-glow-sm {
+    text-shadow:
+      0 0 4px rgba(201,162,39,0.9),
+      0 0 12px rgba(201,162,39,0.4);
+  }
+
+  /* ── Scanline texture overlay ── */
+  .scanlines {
+    position: relative;
+  }
+  .scanlines::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.04) 2px,
+      rgba(0,0,0,0.04) 4px
+    );
+    pointer-events: none;
+    z-index: 1;
+    border-radius: inherit;
+  }
+
+  /* ── Ornamental gold divider ── */
+  .gold-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(201,162,39,0.6) 20%, rgba(201,162,39,0.8) 50%, rgba(201,162,39,0.6) 80%, transparent 100%);
+  }
+
+  /* ── Segmented XP bar fill ── */
+  .xp-bar-fill {
+    background: linear-gradient(90deg, #c9a227 0%, #f0c040 60%, #c9a227 100%);
+    box-shadow: 0 0 8px rgba(201,162,39,0.8), 0 0 20px rgba(201,162,39,0.3);
+  }
+
+  /* ── Octagonal clip (level badge) ── */
+  .octagon {
+    clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+  }
+
+  /* ── Hexagonal clip (class badge) ── */
+  .hexagon {
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  }
+
+  /* ── Rune corner ornaments ── */
+  .rune-corners {
+    position: relative;
+  }
+  .rune-corners::before,
+  .rune-corners::after {
+    content: '◆';
+    position: absolute;
+    font-size: 7px;
+    color: rgba(201,162,39,0.45);
+    line-height: 1;
+  }
+  .rune-corners::before {
+    top: 6px;
+    left: 6px;
+  }
+  .rune-corners::after {
+    bottom: 6px;
+    right: 6px;
+  }
+
+  /* ── Type badge pills ── */
+  .type-badge-a4  { background: rgba(201,162,39,0.15); color: #f0c040; border: 1px solid rgba(201,162,39,0.35); }
+  .type-badge-a3  { background: rgba(0,212,170,0.12);  color: #00d4aa; border: 1px solid rgba(0,212,170,0.3); }
+  .type-badge-cal { background: rgba(122,154,126,0.15); color: #7a9a7e; border: 1px solid rgba(122,154,126,0.3); }
+  .type-badge-eva { background: rgba(159,122,234,0.15); color: #9f7aea; border: 1px solid rgba(159,122,234,0.3); }
+  .type-badge-evt { background: rgba(229,62,62,0.12);  color: #e53e3e; border: 1px solid rgba(229,62,62,0.3); }
 }
