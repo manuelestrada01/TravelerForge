@@ -20,7 +20,8 @@
       "Bash(ls -la \"/c/Users/jetsa/LevelUp/app/\\(dashboard\\)/\")",
       "Bash(grep -r \"console.cloud.google\\\\|google-cloud\\\\|project_id\" /c/Users/jetsa/LevelUp --include=*.ts --include=*.tsx --include=*.json --include=*.md)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(npx next:*)"
     ]
   }
 }
