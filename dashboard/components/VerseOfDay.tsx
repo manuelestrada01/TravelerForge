@@ -1,4 +1,5 @@
-import { BookOpen } from "lucide-react";
+import VerseAngelOverlay from "./VerseAngelOverlay";
+import VerseContent from "./VerseContent";
 
 interface OurMannaResponse {
   verse: {
@@ -83,49 +84,143 @@ async function fetchVerseOfDay(): Promise<{ text: string; reference: string } | 
   }
 }
 
+// Parchment noise — fine grain for ancient manuscript feel
+const PARCHMENT_NOISE =
+  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.055'/%3E%3C/svg%3E\")";
+
 export default async function VerseOfDay() {
   const verse = await fetchVerseOfDay();
 
   return (
-    <div className="hud-panel hud-panel-teal rune-corners relative flex flex-col items-center justify-center p-6 text-center h-full">
-      {/* Radial glow */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,212,170,0.04)_0%,transparent_70%)]" />
+    <div
+      className="relative flex flex-col items-center justify-center p-7 text-center overflow-hidden h-full"
+      style={{
+        background: `${PARCHMENT_NOISE}, linear-gradient(180deg, #1e1b0e 0%, #17140a 40%, #100e07 100%)`,
+        border: "1px solid rgba(220,195,110,0.42)",
+        boxShadow:
+          "0 6px 36px rgba(0,0,0,0.75), inset 0 1px 0 rgba(255,250,200,0.06), inset 0 -1px 0 rgba(0,0,0,0.3)",
+      }}
+    >
+      {/* ── Angel animation overlay ── */}
+      <VerseAngelOverlay />
 
-      {/* Top teal ornament line */}
-      <div className="pointer-events-none absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-teal/50 to-transparent" />
-
-      {/* Icon */}
+      {/* ── Inner manuscript frame ── */}
       <div
-        className="relative mb-4 flex h-11 w-11 items-center justify-center bg-teal/10 border border-teal/30"
-        style={{ clipPath: "polygon(0 6px, 6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px))" }}
-      >
-        <BookOpen size={20} strokeWidth={1.2} className="text-teal" />
-      </div>
+        className="pointer-events-none absolute inset-[7px]"
+        style={{ border: "1px solid rgba(220,195,110,0.14)" }}
+      />
 
-      {/* Label */}
-      <p className="relative mb-1 text-[10px] font-medium uppercase tracking-[0.25em] text-sage/60">
-        Versículo del Día
-      </p>
+      {/* ── Second inner frame — illuminated border ── */}
+      <div
+        className="pointer-events-none absolute inset-[12px]"
+        style={{ border: "1px solid rgba(220,195,110,0.06)" }}
+      />
 
-      {/* Gold divider */}
-      <div className="relative mb-5 mt-2 gold-divider w-16" />
+      {/* ── Corner flourishes — ornate manuscript ── */}
+      <span className="pointer-events-none absolute top-[4px] left-[4px] select-none leading-none" style={{ fontSize: "8px", color: "rgba(220,195,110,0.55)" }}>✦</span>
+      <span className="pointer-events-none absolute top-[4px] right-[4px] select-none leading-none" style={{ fontSize: "8px", color: "rgba(220,195,110,0.55)" }}>✦</span>
+      <span className="pointer-events-none absolute bottom-[4px] left-[4px] select-none leading-none" style={{ fontSize: "8px", color: "rgba(220,195,110,0.55)" }}>✦</span>
+      <span className="pointer-events-none absolute bottom-[4px] right-[4px] select-none leading-none" style={{ fontSize: "8px", color: "rgba(220,195,110,0.55)" }}>✦</span>
 
-      {/* Verse */}
+      {/* ── Crepuscular rays — divine light from above ── */}
+      <div
+        className="pointer-events-none absolute"
+        style={{
+          top: "-10%",
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "280%",
+          height: "85%",
+          background: `conic-gradient(
+            from 270deg at 50% 0%,
+            transparent 0deg,
+            rgba(255,248,180,0.025) 2deg, transparent 4deg,
+            transparent 14deg, rgba(255,248,180,0.02) 16deg, transparent 18deg,
+            transparent 26deg, rgba(255,248,180,0.03) 28deg, transparent 30deg,
+            transparent 38deg, rgba(255,248,180,0.018) 40deg, transparent 42deg,
+            transparent 50deg, rgba(255,248,180,0.025) 52deg, transparent 54deg,
+            transparent 62deg, rgba(255,248,180,0.02) 64deg, transparent 66deg,
+            transparent 74deg, rgba(255,248,180,0.015) 76deg, transparent 78deg,
+            transparent 86deg, rgba(255,248,180,0.02) 88deg, transparent 90deg
+          )`,
+        }}
+      />
+
+      {/* ── Primary divine glow — descending light column ── */}
+      <div
+        className="pointer-events-none absolute"
+        style={{
+          top: 0,
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "70%",
+          height: "100%",
+          background:
+            "radial-gradient(ellipse 60% 50% at 50% 0%, rgba(255,248,180,0.1) 0%, rgba(255,240,140,0.04) 40%, transparent 75%)",
+        }}
+      />
+
+      {/* ── Ambient warm fill ── */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse at center, rgba(220,195,110,0.03) 0%, transparent 70%)",
+        }}
+      />
+
+      {/* ── Top rule — golden light bar ── */}
+      <div
+        className="pointer-events-none absolute top-0 left-0 right-0 h-[1px]"
+        style={{
+          background:
+            "linear-gradient(90deg, transparent 0%, rgba(255,248,180,0.3) 30%, rgba(255,255,220,0.6) 50%, rgba(255,248,180,0.3) 70%, transparent 100%)",
+        }}
+      />
+
+      {/* ── Content with GSAP animations — word reveal + halo pulse ── */}
       {verse ? (
-        <blockquote className="relative flex flex-col items-center">
-          <p className="font-serif text-sm leading-relaxed text-cream italic">
-            &ldquo;{verse.text}&rdquo;
-          </p>
-          <cite className="mt-3 block text-[11px] not-italic text-gold/80 tracking-wider">
-            — {verse.reference}
-          </cite>
-        </blockquote>
+        <VerseContent text={verse.text} reference={verse.reference} />
       ) : (
-        <p className="text-xs text-sage/50">No disponible en este momento.</p>
+        <p className="relative font-serif italic" style={{ fontSize: "12px", color: "rgba(220,195,110,0.35)" }}>
+          No disponible en este momento.
+        </p>
       )}
 
-      {/* Bottom ornament */}
-      <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-20 gold-divider" />
+      {/* ── Bottom ornament — three divine lights ── */}
+      <div
+        className="pointer-events-none absolute bottom-3 left-1/2 flex items-center gap-2"
+        style={{ transform: "translateX(-50%)" }}
+      >
+        <span style={{ fontSize: "5px", color: "rgba(220,195,110,0.3)" }}>✦</span>
+        <div
+          style={{
+            width: "28px",
+            height: "1px",
+            background:
+              "linear-gradient(90deg, transparent, rgba(220,195,110,0.25) 50%, transparent)",
+          }}
+        />
+        <span style={{ fontSize: "7px", color: "rgba(255,248,180,0.45)" }}>✦</span>
+        <div
+          style={{
+            width: "28px",
+            height: "1px",
+            background:
+              "linear-gradient(90deg, transparent, rgba(220,195,110,0.25) 50%, transparent)",
+          }}
+        />
+        <span style={{ fontSize: "5px", color: "rgba(220,195,110,0.3)" }}>✦</span>
+      </div>
+
+      {/* ── Bottom rule ── */}
+      <div
+        className="pointer-events-none absolute bottom-0 left-0 right-0 h-[1px]"
+        style={{
+          background:
+            "linear-gradient(90deg, transparent 0%, rgba(220,195,110,0.2) 40%, rgba(220,195,110,0.35) 50%, rgba(220,195,110,0.2) 60%, transparent 100%)",
+        }}
+      />
     </div>
   );
 }

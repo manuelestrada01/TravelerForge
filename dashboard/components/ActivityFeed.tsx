@@ -24,6 +24,10 @@ function formatRelativeTime(date: Date): string {
   return `Hace ${diffD}d`;
 }
 
+function toRoman(n: number): string {
+  return ["I", "II", "III", "IV", "V"][n - 1] ?? String(n);
+}
+
 const EVENT_ICONS: Record<ActivityEntry["type"], React.ElementType> = {
   xp_base: Mail,
   xp_silent: Zap,
@@ -37,42 +41,36 @@ const EVENT_ICONS: Record<ActivityEntry["type"], React.ElementType> = {
   bimester_unlocked: Unlock,
 };
 
-// Left border colors for each event type
-const EVENT_BORDER: Record<ActivityEntry["type"], string> = {
-  xp_base: "border-l-teal/60",
-  xp_silent: "border-l-gold/60",
-  xp_quality: "border-l-gold/60",
-  xp_event: "border-l-gold/60",
-  strike_added: "border-l-danger/60",
-  strike_removed: "border-l-teal/60",
-  level_up: "border-l-gold",
-  badge_earned: "border-l-arcane/60",
-  bimester_blocked: "border-l-danger",
-  bimester_unlocked: "border-l-teal",
-};
-
-const EVENT_ICON_COLORS: Record<ActivityEntry["type"], string> = {
-  xp_base: "text-teal bg-teal/10",
-  xp_silent: "text-gold bg-gold/10",
-  xp_quality: "text-gold bg-gold/10",
-  xp_event: "text-gold bg-gold/10",
-  strike_added: "text-danger bg-danger/10",
-  strike_removed: "text-teal bg-teal/10",
-  level_up: "text-gold bg-gold/10",
-  badge_earned: "text-arcane bg-arcane/10",
-  bimester_blocked: "text-danger bg-danger/10",
-  bimester_unlocked: "text-teal bg-teal/10",
+// Bronze/amber tones — all event types use the medieval palette
+const EVENT_ICON_BG: Record<ActivityEntry["type"], string> = {
+  xp_base:           "text-[#c8a84b] bg-[rgba(200,168,75,0.08)] border border-[rgba(160,125,55,0.25)]",
+  xp_silent:         "text-[#d4b86a] bg-[rgba(200,168,75,0.1)] border border-[rgba(160,125,55,0.3)]",
+  xp_quality:        "text-[#e8c96a] bg-[rgba(200,168,75,0.12)] border border-[rgba(160,125,55,0.35)]",
+  xp_event:          "text-[#c8a84b] bg-[rgba(200,168,75,0.08)] border border-[rgba(160,125,55,0.25)]",
+  strike_added:      "text-danger bg-danger/[0.08] border border-danger/25",
+  strike_removed:    "text-[#8fb89f] bg-[rgba(143,184,159,0.08)] border border-[rgba(143,184,159,0.2)]",
+  level_up:          "text-[#e8c96a] bg-[rgba(200,168,75,0.14)] border border-[rgba(160,125,55,0.38)]",
+  badge_earned:      "text-[#c8a84b] bg-[rgba(200,168,75,0.1)] border border-[rgba(160,125,55,0.28)]",
+  bimester_blocked:  "text-danger bg-danger/10 border border-danger/30",
+  bimester_unlocked: "text-[#8fb89f] bg-[rgba(143,184,159,0.1)] border border-[rgba(143,184,159,0.25)]",
 };
 
 export default function ActivityFeed({ entries }: ActivityFeedProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const spineRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
-    gsap.fromTo(
-      containerRef.current?.querySelectorAll("[data-entry]") ?? [],
-      { opacity: 0, x: -14 },
-      { opacity: 1, x: 0, stagger: 0.07, duration: 0.4, ease: "power3.out", delay: 0.15 }
-    );
+    gsap.timeline()
+      .fromTo(spineRef.current,
+        { scaleY: 0, transformOrigin: "top" },
+        { scaleY: 1, duration: 0.55, ease: "power2.inOut" }
+      )
+      .fromTo(
+        containerRef.current?.querySelectorAll("[data-entry]") ?? [],
+        { opacity: 0, x: -14 },
+        { opacity: 1, x: 0, stagger: 0.07, duration: 0.38, ease: "power3.out" },
+        "-=0.3"
+      );
   }, { scope: containerRef });
 
   return (
@@ -81,64 +79,98 @@ export default function ActivityFeed({ entries }: ActivityFeedProps) {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, delay: 0.1, ease: "easeOut" }}
-      className="hud-panel scanlines p-5 flex flex-col"
+      className="chronicle-stone h-full p-5 flex flex-col relative"
     >
-      {/* Header */}
-      <div className="flex items-center justify-center mb-4 gap-3">
-        <div className="gold-divider flex-1" />
-        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-sage shrink-0">
-          Fragmentos de Actividad
+      {/* Corner diamond ornaments — at inner frame corners */}
+      <span className="pointer-events-none absolute top-[3px] left-[3px] text-[6px] text-gold/22 leading-none select-none" style={{ zIndex: 1 }}>◆</span>
+      <span className="pointer-events-none absolute top-[3px] right-[3px] text-[6px] text-gold/22 leading-none select-none" style={{ zIndex: 1 }}>◆</span>
+      <span className="pointer-events-none absolute bottom-[3px] left-[3px] text-[6px] text-gold/22 leading-none select-none" style={{ zIndex: 1 }}>◆</span>
+      <span className="pointer-events-none absolute bottom-[3px] right-[3px] text-[6px] text-gold/22 leading-none select-none" style={{ zIndex: 1 }}>◆</span>
+
+      {/* Candlelight from above */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(212,160,23,0.05)_0%,transparent_55%)]" />
+
+      {/* Header — carved stone tablet inscription */}
+      <div className="relative flex flex-col items-center mb-5 gap-1.5" style={{ zIndex: 2 }}>
+        <div className="flex items-center w-full gap-3">
+          <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[rgba(160,125,55,0.4)] to-transparent" />
+          <span className="text-gold/40 text-[8px] font-serif leading-none tracking-widest">✦ ✦ ✦</span>
+          <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[rgba(160,125,55,0.4)] to-transparent" />
+        </div>
+        <p className="text-[12px] font-semibold uppercase tracking-[0.28em] text-[rgba(200,168,75,0.7)] font-serif">
+          Crónica del Escriba
         </p>
-        <div className="gold-divider flex-1" />
+        <div className="flex items-center w-full gap-3">
+          <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[rgba(160,125,55,0.25)] to-transparent" />
+          <span className="text-[rgba(160,125,55,0.3)] text-[6px] font-serif leading-none">◆</span>
+          <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[rgba(160,125,55,0.25)] to-transparent" />
+        </div>
       </div>
 
-      <div className="flex flex-col gap-1.5">
-        {entries.length === 0 && (
-          <p className="text-xs text-sage/50 py-4 text-center">Sin actividad reciente.</p>
-        )}
-        {entries.slice(0, 5).map((entry, index) => {
-          const Icon = EVENT_ICONS[entry.type];
-          const iconClass = EVENT_ICON_COLORS[entry.type];
-          const borderClass = EVENT_BORDER[entry.type];
-          const hasXp = entry.xpDelta !== undefined && entry.xpDelta !== 0;
+      {entries.length === 0 ? (
+        <div className="relative flex flex-col items-center justify-center py-8 gap-2" style={{ zIndex: 2 }}>
+          <span className="text-gold/15 text-2xl font-serif leading-none">⚔</span>
+          <p className="text-xs text-sage/40 font-serif italic">
+            El escriba aún no ha registrado eventos.
+          </p>
+        </div>
+      ) : (
+        <div className="relative flex flex-col gap-0" style={{ zIndex: 2 }}>
+          {/* Timeline spine */}
+          <div ref={spineRef} className="absolute left-[19px] top-2 bottom-2 w-[2px] bg-gradient-to-b from-gold/40 via-gold/15 to-transparent pointer-events-none" />
 
-          return (
-            <div
-              key={entry.id}
-              data-entry
-              className={`flex items-center gap-2.5 px-2.5 py-2 border-l-2 bg-hud-base/40 ${borderClass}`}
-              style={{ opacity: 0 /* GSAP will animate in */ }}
-            >
-              <div className={`flex h-6 w-6 flex-shrink-0 items-center justify-center ${iconClass}`}
-                style={{ clipPath: "polygon(0 3px, 3px 0, calc(100% - 3px) 0, 100% 3px, 100% calc(100% - 3px), calc(100% - 3px) 100%, 3px 100%, 0 calc(100% - 3px))" }}
+          {entries.slice(0, 5).map((entry, index) => {
+            const Icon = EVENT_ICONS[entry.type];
+            const iconBgClass = EVENT_ICON_BG[entry.type];
+            const hasXp = entry.xpDelta !== undefined && entry.xpDelta !== 0;
+
+            return (
+              <div
+                key={entry.id}
+                data-entry
+                className="relative flex items-start gap-3 pl-1 pr-3 py-3 border-b border-[rgba(160,125,55,0.12)] last:border-b-0"
+                style={{ opacity: 0 }}
               >
-                <Icon size={11} strokeWidth={1.5} />
+                {/* Timeline node — square badge, no chamfer */}
+                <div className="relative z-10 flex-shrink-0 mt-0.5">
+                  <div className={`flex h-9 w-9 items-center justify-center ${iconBgClass}`}>
+                    <Icon size={14} strokeWidth={1.4} />
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="flex-1 min-w-0 pt-0.5">
+                  <div className="flex items-baseline gap-2">
+                    {/* Roman numeral as chapter marker */}
+                    <span className="font-serif text-[14px] font-bold text-[rgba(160,125,55,0.45)] flex-shrink-0 leading-none w-5 text-right">
+                      {toRoman(index + 1)}
+                    </span>
+                    <p className="text-[14px] font-serif text-cream/85 leading-tight truncate">
+                      {entry.description}
+                    </p>
+                  </div>
+                  <p className="mt-1 text-[11px] font-serif uppercase tracking-[0.15em] text-[rgba(160,125,55,0.4)]">
+                    {formatRelativeTime(entry.timestamp)}
+                    {entry.productionType && (
+                      <span className="ml-1.5 text-[rgba(160,125,55,0.3)]">· {entry.productionType}</span>
+                    )}
+                  </p>
+                </div>
+
+                {/* XP delta — amber gold */}
+                {hasXp && (
+                  <span className={`flex-shrink-0 text-[13px] font-serif font-semibold tabular-nums mt-0.5 ${
+                    entry.xpDelta! > 0 ? "text-[#c8a84b]" : "text-danger"
+                  }`}>
+                    {entry.xpDelta! > 0 ? "+" : ""}{entry.xpDelta}
+                    <span className="text-[10px] ml-0.5 opacity-60">xp</span>
+                  </span>
+                )}
               </div>
-
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium text-cream leading-tight truncate">
-                  {entry.description}
-                </p>
-                <p className="mt-0.5 text-[9px] uppercase tracking-wider text-sage/60">
-                  {formatRelativeTime(entry.timestamp)}
-                  {entry.productionType && <span className="ml-1.5">· {entry.productionType}</span>}
-                </p>
-              </div>
-
-              {hasXp && (
-                <span className={`flex-shrink-0 px-2 py-0.5 text-[10px] font-bold tabular-nums ${
-                  entry.xpDelta! > 0 ? "text-teal" : "text-danger"
-                }`}>
-                  {entry.xpDelta! > 0 ? "+" : ""}{entry.xpDelta}
-                </span>
-              )}
-
-              {/* Row index for visual rhythm */}
-              <span className="flex-shrink-0 text-[8px] text-hud-border font-mono tabular-nums">{String(index + 1).padStart(2, "0")}</span>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
     </motion.div>
   );
 }

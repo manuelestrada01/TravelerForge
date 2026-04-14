@@ -12,7 +12,6 @@ import DashboardAnimatedWrapper from "@/dashboard/components/DashboardAnimatedWr
 import SyncTrigger from "@/dashboard/components/SyncTrigger";
 import StatusBar from "@/dashboard/components/StatusBar";
 import TalentsCard from "@/talentos/components/TalentsCard";
-import ClassesSection from "@/clases-formativas/components/ClassesSection";
 import { ALL_TALENTS } from "@/talentos/types";
 import { ActivityEntry } from "@/xp/types";
 
@@ -99,7 +98,13 @@ export default async function DashboardPage({
   return (
     <DashboardAnimatedWrapper>
       <SyncTrigger />
-      <HeroSection studentName={studentName} classEntry={activeClassEntry} />
+      <HeroSection
+        studentName={studentName}
+        classEntry={activeClassEntry}
+        level={level}
+        levelName={levelName}
+        talents={talents}
+      />
 
       <StatusBar
         xp={xp}
@@ -111,17 +116,13 @@ export default async function DashboardPage({
         blocked={blocked}
         strikes={strikes}
         strikeDetails={strikeDetails}
-        classEntry={activeClassEntry}
-        talents={talents}
       />
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 gap-4 items-stretch">
         <ActivityFeed entries={activity} />
-        <TalentsCard talents={talents} />
         <VerseOfDay />
+        <TalentsCard talents={talents} />
       </div>
-
-      <ClassesSection activeClassSlug={formativeClassSlug} classes={publishedClasses} />
     </DashboardAnimatedWrapper>
   );
 }

@@ -22,23 +22,33 @@ export default function Header({ courses, studentName, studentImage }: HeaderPro
 
   return (
     <header
-      className="flex h-14 items-center justify-between border-b border-hud-border bg-hud-base/95 backdrop-blur-sm px-4"
-      style={{ zIndex: 10, position: "relative" }}
+      className="flex h-14 items-center justify-between px-5"
+      style={{
+        background: "linear-gradient(180deg, #141109 0%, #100e07 100%)",
+        borderBottom: "1px solid rgba(160,125,55,0.22)",
+        boxShadow: "0 2px 12px rgba(0,0,0,0.5)",
+        zIndex: 10,
+        position: "relative",
+      }}
     >
-      {/* Logo */}
-      <div className="flex items-center gap-4">
-        <span
-          className="font-serif text-base font-semibold text-gold tracking-tight gold-glow-sm select-none"
-        >
-          Visor Académico
-        </span>
+      {/* ── Left: brand + course tabs ── */}
+      <div className="flex items-center gap-5">
+        {/* Logo */}
+        <div className="flex flex-col leading-none select-none">
+          <span className="font-serif text-sm font-bold tracking-[0.06em] text-[#c8a84b] gold-glow-sm">
+            LEVELUP
+          </span>
+          <span className="text-[7px] font-serif uppercase tracking-[0.28em] text-[rgba(160,125,55,0.45)]">
+            Visor Académico
+          </span>
+        </div>
 
-        {/* Divider */}
+        {/* Vertical divider */}
         {courses.length > 0 && (
-          <span className="h-4 w-px bg-hud-border" />
+          <div className="h-5 w-px bg-gradient-to-b from-transparent via-[rgba(160,125,55,0.3)] to-transparent" />
         )}
 
-        {/* Course tabs — pill style */}
+        {/* Course tabs — straight edges, medieval */}
         <nav className="flex items-center gap-1">
           {courses.map(({ id, name }) => {
             const isActive = id === activeCourseId;
@@ -46,11 +56,16 @@ export default function Header({ courses, studentName, studentImage }: HeaderPro
               <Link
                 key={id}
                 href={`/?courseId=${id}`}
-                className={`px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider transition-all duration-200 ${
+                className={`relative px-3.5 py-1 text-[10px] font-serif font-semibold uppercase tracking-[0.18em] transition-all duration-200 ${
                   isActive
-                    ? "bg-gold text-hud-base shadow-gold-glow-sm"
-                    : "text-sage hover:text-cream hover:bg-hud-card"
+                    ? "text-[#1a1000] bg-[#c8a84b]"
+                    : "text-[rgba(136,153,170,0.7)] hover:text-[rgba(232,224,208,0.85)] hover:bg-[rgba(200,168,75,0.06)]"
                 }`}
+                style={isActive ? {
+                  boxShadow: "0 0 10px rgba(200,168,75,0.3)",
+                } : {
+                  border: "1px solid rgba(160,125,55,0.18)",
+                }}
               >
                 {name}
               </Link>
@@ -59,16 +74,28 @@ export default function Header({ courses, studentName, studentImage }: HeaderPro
         </nav>
       </div>
 
-      {/* Right side */}
+      {/* ── Right: bell + avatar ── */}
       <div className="flex items-center gap-2">
-        <button className="relative flex h-7 w-7 items-center justify-center rounded text-sage hover:text-gold hover:bg-hud-card transition-colors">
-          <Bell size={15} strokeWidth={1.5} />
+        {/* Bell — square button */}
+        <button
+          className="relative flex h-7 w-7 items-center justify-center text-[rgba(136,153,170,0.5)] hover:text-[#c8a84b] hover:bg-[rgba(200,168,75,0.06)] transition-colors"
+          style={{ border: "1px solid rgba(160,125,55,0.12)" }}
+        >
+          <Bell size={14} strokeWidth={1.4} />
         </button>
-        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gold/20 border border-gold/40 overflow-hidden">
+
+        {/* Avatar — square heraldic frame */}
+        <div
+          className="flex h-7 w-7 items-center justify-center overflow-hidden"
+          style={{
+            border: "1px solid rgba(160,125,55,0.4)",
+            background: "rgba(160,125,55,0.1)",
+          }}
+        >
           {studentImage ? (
             <Image src={studentImage} alt={studentName} width={28} height={28} className="h-full w-full object-cover" />
           ) : (
-            <span className="text-gold text-xs font-semibold font-serif">
+            <span className="font-serif text-xs font-semibold text-[#c8a84b]">
               {studentName.charAt(0)}
             </span>
           )}
