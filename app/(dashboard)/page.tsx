@@ -53,7 +53,7 @@ export default async function DashboardPage({
           strikes={DEMO_STRIKES}
           strikeDetails={DEMO_STRIKE_DETAILS}
         />
-        <div className="grid grid-cols-3 gap-4 items-stretch">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-stretch">
           <ActivityFeed entries={DEMO_ACTIVITY} />
           <VerseOfDay />
           <TalentsCard talents={DEMO_TALENTS} />
@@ -155,7 +155,7 @@ export default async function DashboardPage({
         strikeDetails={strikeDetails}
       />
 
-      <div className="grid grid-cols-3 gap-4 items-stretch">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-stretch">
         <ActivityFeed entries={activity} />
         <VerseOfDay />
         <TalentsCard talents={talents} />

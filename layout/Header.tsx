@@ -47,14 +47,14 @@ export default function Header({ courses, studentName: _studentName, studentImag
         )}
 
         {/* Course tabs — straight edges, medieval */}
-        <nav className="flex items-center gap-1">
+        <nav className="flex items-center gap-1 min-w-0">
           {courses.map(({ id, name }) => {
             const isActive = id === activeCourseId;
             return (
               <Link
                 key={id}
                 href={`/?courseId=${id}`}
-                className={`relative px-3.5 py-1 text-[10px] font-serif font-semibold uppercase tracking-[0.18em] transition-all duration-200 ${
+                className={`relative px-3.5 py-1 text-[10px] font-serif font-semibold uppercase tracking-[0.18em] transition-all duration-200 max-w-[140px] md:max-w-none truncate ${
                   isActive
                     ? "text-[#1a1000] bg-[#c8a84b]"
                     : "text-[rgba(136,153,170,0.7)] hover:text-[rgba(232,224,208,0.85)] hover:bg-[rgba(200,168,75,0.06)]"

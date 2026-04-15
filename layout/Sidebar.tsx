@@ -38,7 +38,7 @@ export default function Sidebar({ studentName, studentImage, level, formativeCla
 
   return (
     <aside
-      className="group flex h-full w-16 hover:w-[220px] flex-shrink-0 flex-col transition-all duration-300 ease-in-out overflow-hidden"
+      className="group hidden md:flex h-full w-16 hover:w-[220px] flex-shrink-0 flex-col transition-all duration-300 ease-in-out overflow-hidden"
       style={{
         background: `${STONE_NOISE}, linear-gradient(180deg, #141109 0%, #0e0c08 100%)`,
         borderRight: "1px solid rgba(160,125,55,0.28)",

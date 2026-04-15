@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import Sidebar from "@/layout/Sidebar";
 import Header from "@/layout/Header";
 import Footer from "@/layout/Footer";
+import MobileNav from "@/layout/MobileNav";
 import { getAuthSession } from "@/lib/session";
 import { getProfile } from "@/lib/supabase/profiles";
 import { getCoursesByTeacher, getCoursesByIds, getVisibleCourseIds } from "@/lib/supabase/courses";
@@ -46,11 +47,12 @@ export default async function DashboardLayout({
             level={DEMO_LEVEL}
             formativeClassTitle={DEMO_CLASS.title}
           />
-          <main className="flex-1 overflow-y-auto flex flex-col">
+          <main className="flex-1 overflow-y-auto flex flex-col pb-16 md:pb-0">
             <div className="flex-1">{children}</div>
             <Footer />
           </main>
         </div>
+        <MobileNav />
       </div>
     );
   }
@@ -115,13 +117,14 @@ export default async function DashboardLayout({
             level={level}
             formativeClassTitle={formativeClassTitle}
           />
-          <main className="flex-1 overflow-y-auto flex flex-col">
+          <main className="flex-1 overflow-y-auto flex flex-col pb-16 md:pb-0">
             <div className="flex-1">
               {children}
             </div>
             <Footer />
           </main>
         </div>
+        <MobileNav />
       </div>
     );
   }

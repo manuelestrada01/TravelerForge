@@ -225,7 +225,7 @@ export default function StatusBar({
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
-        className="relative overflow-hidden flex"
+        className="relative overflow-hidden flex flex-col md:flex-row"
         style={{
           background: `${STONE_NOISE}, linear-gradient(180deg, #18140c 0%, #120f09 100%)`,
           borderTop: blocked
@@ -307,13 +307,14 @@ export default function StatusBar({
           </div>
         </div>
 
-        {/* ── Vertical divider — carved groove ── */}
-        <div className="w-px bg-gradient-to-b from-transparent via-[rgba(160,125,55,0.22)] to-transparent my-3" />
+        {/* ── Divider — vertical on desktop, horizontal on mobile ── */}
+        <div className="hidden md:block w-px bg-gradient-to-b from-transparent via-[rgba(160,125,55,0.22)] to-transparent my-3" />
+        <div className="md:hidden h-px bg-gradient-to-r from-transparent via-[rgba(160,125,55,0.22)] to-transparent mx-5" />
 
         {/* ── Strikes — wrought iron tally ── */}
         <div
           onClick={() => hasDetails && setPopupOpen(true)}
-          className={`flex w-56 flex-col justify-center px-5 py-4 transition-colors ${
+          className={`flex md:w-56 flex-col justify-center px-5 py-4 transition-colors ${
             hasDetails ? "cursor-pointer hover:bg-[rgba(200,30,30,0.04)]" : ""
           }`}
         >
