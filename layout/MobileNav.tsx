@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Sword, BookOpen, Users, Shield } from "lucide-react";
+import { signOut } from "next-auth/react";
+import { LayoutDashboard, Sword, BookOpen, Users, Shield, LogOut } from "lucide-react";
 
 const NAV_ITEMS = [
   { href: "/",                   label: "Inicio",    icon: LayoutDashboard },
@@ -30,15 +31,15 @@ export default function MobileNav() {
           <Link
             key={href}
             href={href}
-            className="flex flex-col items-center gap-1 px-3 py-2 transition-colors"
+            className="flex flex-col items-center gap-1 px-2 py-2 transition-colors"
           >
             <Icon
-              size={20}
+              size={19}
               strokeWidth={1.4}
               className={isActive ? "text-[#c8a84b]" : "text-[rgba(136,153,170,0.6)]"}
             />
             <span
-              className={`text-[9px] font-serif uppercase tracking-[0.18em] ${
+              className={`text-[9px] font-serif uppercase tracking-[0.15em] ${
                 isActive ? "text-[#c8a84b]" : "text-[rgba(136,153,170,0.5)]"
               }`}
             >
@@ -47,6 +48,16 @@ export default function MobileNav() {
           </Link>
         );
       })}
+
+      <button
+        onClick={() => signOut({ callbackUrl: "/login" })}
+        className="flex flex-col items-center gap-1 px-2 py-2 transition-colors"
+      >
+        <LogOut size={19} strokeWidth={1.4} className="text-[rgba(136,153,170,0.6)]" />
+        <span className="text-[9px] font-serif uppercase tracking-[0.15em] text-[rgba(136,153,170,0.5)]">
+          Salir
+        </span>
+      </button>
     </nav>
   );
 }
