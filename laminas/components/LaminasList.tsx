@@ -30,8 +30,8 @@ function BimestreTable({ laminas }: { laminas: Lamina[] }) {
         boxShadow: "0 4px 20px rgba(0,0,0,0.55)",
       }}
     >
-      {/* Header row */}
-      <div className="grid grid-cols-[72px_1fr_110px_110px_110px_72px] gap-4 border-b border-[rgba(160,125,55,0.15)] px-5 py-2.5">
+      {/* Header row — desktop only */}
+      <div className="hidden md:grid grid-cols-[72px_1fr_110px_110px_110px_72px] gap-4 border-b border-[rgba(160,125,55,0.15)] px-5 py-2.5">
         {["Tipo", "Tarea", "Vencimiento", "Entregado", "Estado", "XP"].map((col) => (
           <p key={col} className="text-[10px] font-serif uppercase tracking-[0.25em] text-[rgba(160,125,55,0.45)]">
             {col}
@@ -46,39 +46,63 @@ function BimestreTable({ laminas }: { laminas: Lamina[] }) {
           return (
             <div
               key={lamina.id}
-              className={`grid grid-cols-[72px_1fr_110px_110px_110px_72px] gap-4 items-center px-5 py-3.5 transition-colors hover:bg-[rgba(200,168,75,0.02)] ${
+              className={`transition-colors hover:bg-[rgba(200,168,75,0.02)] ${
                 i !== laminas.length - 1 ? "border-b border-[rgba(160,125,55,0.1)]" : ""
               } ${isPending ? "opacity-45" : ""}`}
             >
-              {/* Type badge — straight */}
-              <span className="w-fit px-2 py-0.5 text-[11px] font-serif uppercase tracking-[0.18em] text-[rgba(160,125,55,0.6)] border border-[rgba(160,125,55,0.2)] bg-[rgba(160,125,55,0.06)]">
-                {lamina.productionType}
-              </span>
-
-              {/* Title */}
-              <div className="min-w-0">
-                <p className="font-serif text-[17px] text-[rgba(232,224,208,0.8)] leading-tight truncate">{lamina.title}</p>
-                <div className="flex items-center gap-2 mt-0.5">
-                  {lamina.strikeAdded && (
-                    <p className="text-[11px] font-serif text-danger uppercase tracking-wider">+1 Strike</p>
-                  )}
-                  {lamina.isEarly && (
-                    <p className="text-[11px] font-serif text-[#c8a84b]/70 uppercase tracking-wider">◆ Anticipada</p>
-                  )}
+              {/* Desktop row */}
+              <div className="hidden md:grid grid-cols-[72px_1fr_110px_110px_110px_72px] gap-4 items-center px-5 py-3.5">
+                <span className="w-fit px-2 py-0.5 text-[11px] font-serif uppercase tracking-[0.18em] text-[rgba(160,125,55,0.6)] border border-[rgba(160,125,55,0.2)] bg-[rgba(160,125,55,0.06)]">
+                  {lamina.productionType}
+                </span>
+                <div className="min-w-0">
+                  <p className="font-serif text-[17px] text-[rgba(232,224,208,0.8)] leading-tight truncate">{lamina.title}</p>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    {lamina.strikeAdded && <p className="text-[11px] font-serif text-danger uppercase tracking-wider">+1 Strike</p>}
+                    {lamina.isEarly && <p className="text-[11px] font-serif text-[#c8a84b]/70 uppercase tracking-wider">◆ Anticipada</p>}
+                  </div>
                 </div>
+                <p className="font-serif text-[15px] text-[rgba(160,125,55,0.45)]">{lamina.dueDate ? formatDate(lamina.dueDate) : "—"}</p>
+                <p className="font-serif text-[15px] text-[rgba(160,125,55,0.45)]">{lamina.submittedAt ? formatDate(lamina.submittedAt) : "—"}</p>
+                <span className={`w-fit border px-2 py-0.5 text-[11px] font-serif ${status.bg} ${status.border} ${status.color}`}>
+                  {status.label}
+                </span>
+                <p className={`font-serif text-[17px] font-bold tabular-nums ${lamina.xpEarned ? "text-[#c8a84b]" : "text-[rgba(160,125,55,0.25)]"}`}>
+                  {lamina.xpEarned ? `+${lamina.xpEarned}` : "—"}
+                </p>
               </div>
 
-              <p className="font-serif text-[15px] text-[rgba(160,125,55,0.45)]">{lamina.dueDate ? formatDate(lamina.dueDate) : "—"}</p>
-              <p className="font-serif text-[15px] text-[rgba(160,125,55,0.45)]">{lamina.submittedAt ? formatDate(lamina.submittedAt) : "—"}</p>
-
-              {/* Status pill — straight */}
-              <span className={`w-fit border px-2 py-0.5 text-[11px] font-serif ${status.bg} ${status.border} ${status.color}`}>
-                {status.label}
-              </span>
-
-              <p className={`font-serif text-[17px] font-bold tabular-nums ${lamina.xpEarned ? "text-[#c8a84b]" : "text-[rgba(160,125,55,0.25)]"}`}>
-                {lamina.xpEarned ? `+${lamina.xpEarned}` : "—"}
-              </p>
+              {/* Mobile card */}
+              <div className="md:hidden flex flex-col gap-2 px-4 py-3">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="px-2 py-0.5 text-[11px] font-serif uppercase tracking-[0.18em] text-[rgba(160,125,55,0.6)] border border-[rgba(160,125,55,0.2)] bg-[rgba(160,125,55,0.06)]">
+                      {lamina.productionType}
+                    </span>
+                    <span className={`border px-2 py-0.5 text-[11px] font-serif ${status.bg} ${status.border} ${status.color}`}>
+                      {status.label}
+                    </span>
+                  </div>
+                  <p className={`font-serif text-[17px] font-bold tabular-nums shrink-0 ${lamina.xpEarned ? "text-[#c8a84b]" : "text-[rgba(160,125,55,0.25)]"}`}>
+                    {lamina.xpEarned ? `+${lamina.xpEarned} XP` : "—"}
+                  </p>
+                </div>
+                <p className="font-serif text-[15px] text-[rgba(232,224,208,0.8)] leading-snug">{lamina.title}</p>
+                <div className="flex items-center gap-3 flex-wrap">
+                  {lamina.dueDate && (
+                    <p className="text-[11px] font-serif text-[rgba(160,125,55,0.4)] uppercase tracking-wider">
+                      Vence: {formatDate(lamina.dueDate)}
+                    </p>
+                  )}
+                  {lamina.submittedAt && (
+                    <p className="text-[11px] font-serif text-[rgba(160,125,55,0.4)] uppercase tracking-wider">
+                      Entregado: {formatDate(lamina.submittedAt)}
+                    </p>
+                  )}
+                  {lamina.strikeAdded && <p className="text-[11px] font-serif text-danger uppercase tracking-wider">+1 Strike</p>}
+                  {lamina.isEarly && <p className="text-[11px] font-serif text-[#c8a84b]/70 uppercase tracking-wider">◆ Anticipada</p>}
+                </div>
+              </div>
             </div>
           );
         })}

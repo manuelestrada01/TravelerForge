@@ -117,9 +117,9 @@ export default function RankingList({ entries, currentEmail }: Props) {
       )}
 
       {/* Header columns */}
-      <div className="grid grid-cols-[44px_1fr_140px_80px_120px] gap-4 px-5 py-2">
-        {["#", "Estudiante", "Clase", "Nivel", "XP"].map((h) => (
-          <p key={h} className="text-[12px] font-serif uppercase tracking-[0.25em] text-[rgba(160,125,55,0.45)]">
+      <div className="grid grid-cols-[40px_1fr_90px] md:grid-cols-[44px_1fr_140px_80px_120px] gap-3 md:gap-4 px-4 md:px-5 py-2">
+        {["#", "Estudiante", "Clase", "Nivel", "XP"].map((h, idx) => (
+          <p key={h} className={`text-[12px] font-serif uppercase tracking-[0.25em] text-[rgba(160,125,55,0.45)] ${idx === 2 || idx === 3 ? "hidden md:block" : ""}`}>
             {h}
           </p>
         ))}
@@ -155,7 +155,7 @@ export default function RankingList({ entries, currentEmail }: Props) {
           <div
             key={entry.email}
             data-row
-            className="relative grid grid-cols-[44px_1fr_140px_80px_120px] gap-4 items-center px-5 py-3.5 hover:brightness-110 transition-all"
+            className="relative grid grid-cols-[40px_1fr_90px] md:grid-cols-[44px_1fr_140px_80px_120px] gap-3 md:gap-4 items-center px-4 md:px-5 py-3 md:py-3.5 hover:brightness-110 transition-all"
             style={{
               background: rowBg,
               border: rowBorder,
@@ -199,24 +199,24 @@ export default function RankingList({ entries, currentEmail }: Props) {
               </div>
             </div>
 
-            {/* Class */}
-            <div className="relative flex items-center gap-2">
+            {/* Class — hidden on mobile */}
+            <div className="relative hidden md:flex items-center gap-2">
               <Icon size={13} strokeWidth={1.4} className={medal ? medal.color : "text-[rgba(160,125,55,0.45)]"} />
               <span className={`font-serif text-[14px] ${medal ? medal.color : "text-[rgba(160,125,55,0.55)]"}`}>
                 {classLabel}
               </span>
             </div>
 
-            {/* Level */}
-            <span className={`relative font-serif text-[15px] font-bold tabular-nums ${
+            {/* Level — hidden on mobile */}
+            <span className={`relative hidden md:block font-serif text-[15px] font-bold tabular-nums ${
               medal ? medal.color : isMe ? "text-[#c8a84b]" : "text-[rgba(160,125,55,0.55)]"
             }`}>
               Nv. {entry.level}
             </span>
 
             {/* XP + bar */}
-            <div className="relative flex flex-col gap-1.5">
-              <span className={`font-serif text-[15px] font-bold tabular-nums text-right ${
+            <div className="relative flex flex-col gap-1.5 min-w-0">
+              <span className={`font-serif text-[13px] md:text-[15px] font-bold tabular-nums text-right ${
                 medal ? medal.color : isMe ? "text-[#c8a84b]" : "text-[rgba(160,125,55,0.7)]"
               }`}>
                 {entry.xpTotal.toLocaleString("es-AR")} XP

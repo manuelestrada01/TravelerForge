@@ -121,7 +121,7 @@ export default function MisionesGrid({ pendientes, completadas, xpTotal, nivel, 
 
       {/* ── Stats strip ── */}
       <div
-        className="relative px-6 py-4 flex items-center gap-6 overflow-hidden"
+        className="relative px-4 py-4 md:px-6 flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6 overflow-hidden"
         style={{
           background: `${STONE_NOISE}, linear-gradient(170deg, #141209 0%, #0e0d07 100%)`,
           border: "1px solid rgba(160,125,55,0.32)",
@@ -132,7 +132,7 @@ export default function MisionesGrid({ pendientes, completadas, xpTotal, nivel, 
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(200,148,40,0.06)_0%,transparent_55%)]" />
 
         {/* Progress bar */}
-        <div className="flex-1 relative">
+        <div className="w-full md:flex-1 relative">
           <div className="flex items-center justify-between mb-2">
             <p className="text-[11px] font-serif uppercase tracking-[0.25em] text-[rgba(160,125,55,0.5)]">Progreso del bimestre</p>
             <p className="text-[11px] font-serif uppercase tracking-wider text-[rgba(200,168,75,0.6)]">{progressPct}%</p>
@@ -148,8 +148,9 @@ export default function MisionesGrid({ pendientes, completadas, xpTotal, nivel, 
           </div>
         </div>
 
-        <div className="h-8 w-px bg-gradient-to-b from-transparent via-[rgba(160,125,55,0.25)] to-transparent" />
+        <div className="hidden md:block h-8 w-px bg-gradient-to-b from-transparent via-[rgba(160,125,55,0.25)] to-transparent" />
 
+        <div className="w-full md:w-auto grid grid-cols-3 md:flex md:items-center md:gap-6 gap-3">
         {[
           { label: "Completadas", value: `${completadas.length}/${total}`, color: "text-[rgba(232,224,208,0.8)]" },
           { label: "XP Total", value: `${xpTotal.toLocaleString("es-AR")} XP`, color: "text-[#c8a84b] gold-glow-sm" },
@@ -157,9 +158,10 @@ export default function MisionesGrid({ pendientes, completadas, xpTotal, nivel, 
         ].map(({ label, value, color }) => (
           <div key={label} data-stat className="text-center relative" style={{ opacity: 0 }}>
             <p className="text-[10px] font-serif uppercase tracking-[0.25em] text-[rgba(160,125,55,0.45)] mb-0.5">{label}</p>
-            <p className={`font-serif text-[22px] font-bold tabular-nums ${color}`}>{value}</p>
+            <p className={`font-serif text-[18px] md:text-[22px] font-bold tabular-nums ${color}`}>{value}</p>
           </div>
         ))}
+        </div>
       </div>
 
       {/* ── Misiones Activas ── */}
@@ -187,7 +189,7 @@ export default function MisionesGrid({ pendientes, completadas, xpTotal, nivel, 
           </div>
         ) : (
           <div className="flex flex-col gap-3">
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {visible.map((m) => <MisionCard key={m.id} m={m} dataAttr="visible" />)}
               {expanded && hidden.map((m) => <MisionCard key={m.id} m={m} dataAttr="hidden" />)}
             </div>
