@@ -25,7 +25,7 @@ const CLASS_ICONS: Record<string, LucideIcon> = {
 const CLASS_LABELS: Record<string, string> = {
   barbaro: "Bárbaro",
   bardo: "Bardo",
-  clerigo: "Clérigo",
+  clerigo: "Clerigo",
   paladin: "Paladín",
   druida: "Druida",
   erudito: "Erudito",
@@ -90,6 +90,7 @@ export default function RankingList({ entries, currentEmail }: Props) {
 
   return (
     <div ref={containerRef} className="flex flex-col gap-3">
+
 
       {/* Tu posición */}
       {currentEntry && (
