@@ -115,26 +115,26 @@ export default function HeroSection({ studentName, classEntry, level, levelName,
       <div className="pointer-events-none absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-[rgba(160,125,55,0.6)] via-[rgba(200,168,75,0.4)] to-[rgba(160,125,55,0.15)]" />
       <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-[rgba(160,125,55,0.4)] via-[rgba(160,125,55,0.25)] to-transparent" />
 
-      {/* Vertical divider before crest */}
-      <div className="pointer-events-none absolute right-[216px] top-6 bottom-6 w-px bg-gradient-to-b from-transparent via-[rgba(160,125,55,0.28)] to-transparent" />
+      {/* Vertical divider before crest — desktop only */}
+      <div className="pointer-events-none hidden md:block absolute right-[216px] top-6 bottom-6 w-px bg-gradient-to-b from-transparent via-[rgba(160,125,55,0.28)] to-transparent" />
 
       {/* Content */}
-      <div className="relative z-10 flex h-full items-center justify-between px-8 py-8">
+      <div className="relative z-10 flex h-full items-center justify-between px-4 py-6 md:px-8 md:py-8">
 
         {/* ── Left: Proclamation text ── */}
         <motion.div
-          className="flex flex-col justify-center"
+          className="flex flex-col justify-center items-center md:items-start text-center md:text-left flex-1 min-w-0"
           variants={textContainer}
           initial="hidden"
           animate="show"
         >
           {/* Class label — heraldic small caps */}
           <motion.div variants={textItem} className="flex items-center gap-3 mb-3">
-            <div className="h-px w-6 bg-[rgba(160,125,55,0.45)]" />
+            <div className="hidden md:block h-px w-6 bg-[rgba(160,125,55,0.45)]" />
             <span className="text-[11px] font-serif uppercase tracking-[0.4em] text-[rgba(200,168,75,0.55)]">
               {classTitle}
             </span>
-            <div className="h-px w-6 bg-[rgba(160,125,55,0.45)]" />
+            <div className="hidden md:block h-px w-6 bg-[rgba(160,125,55,0.45)]" />
           </motion.div>
 
           {/* Main heading — royal proclamation, dominant serif */}
@@ -157,9 +157,9 @@ export default function HeroSection({ studentName, classEntry, level, levelName,
             {heroText}
           </motion.p>
 
-          {/* Attribute chips — heraldic bronze tags, straight edges */}
+          {/* Attribute chips */}
           {classAttributes.length > 0 && (
-            <motion.div variants={textItem} className="mt-5 flex gap-2">
+            <motion.div variants={textItem} className="mt-5 flex flex-wrap gap-2">
               {classAttributes.map((attr) => (
                 <span
                   key={attr}
@@ -170,14 +170,27 @@ export default function HeroSection({ studentName, classEntry, level, levelName,
               ))}
             </motion.div>
           )}
+
+          {/* Character sheet button — mobile only, full width */}
+          <motion.button
+            variants={textItem}
+            ref={btnRef}
+            onClick={() => setSheetOpen(true)}
+            className="md:hidden mt-4 flex items-center justify-center gap-2 w-full py-2.5 border border-[rgba(160,125,55,0.4)] bg-[rgba(160,125,55,0.07)] hover:border-[rgba(200,168,75,0.6)] transition-colors cursor-pointer"
+          >
+            <ScrollText size={13} strokeWidth={1.3} style={{ color: "rgba(200,168,75,0.7)" }} />
+            <span className="text-[11px] font-serif uppercase tracking-[0.25em] text-[rgba(200,168,75,0.7)]">
+              Hoja de Personaje
+            </span>
+          </motion.button>
         </motion.div>
 
-        {/* ── Right: Heraldic class crest ── */}
+        {/* ── Right: Heraldic class crest — desktop only ── */}
         <motion.div
           initial={{ opacity: 0, x: 16 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.65, delay: 0.3, ease: "easeOut" }}
-          className="flex-shrink-0 flex flex-col items-center gap-3 ml-8 w-[176px]"
+          className="hidden md:flex flex-shrink-0 flex-col items-center gap-3 ml-8 w-[176px]"
         >
           {/* Square heraldic crest — no hexagon, no clip-path */}
           <div
@@ -204,9 +217,8 @@ export default function HeroSection({ studentName, classEntry, level, levelName,
             </p>
           </div>
 
-          {/* Character sheet button */}
+          {/* Character sheet button — desktop */}
           <button
-            ref={btnRef}
             onClick={() => setSheetOpen(true)}
             className="flex items-center gap-2 px-4 py-2 border border-[rgba(160,125,55,0.35)] bg-[rgba(160,125,55,0.05)] hover:border-[rgba(200,168,75,0.6)] hover:bg-[rgba(160,125,55,0.1)] transition-colors cursor-pointer"
           >

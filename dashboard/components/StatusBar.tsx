@@ -314,12 +314,12 @@ export default function StatusBar({
         {/* ── Strikes — wrought iron tally ── */}
         <div
           onClick={() => hasDetails && setPopupOpen(true)}
-          className={`flex md:w-56 flex-col justify-center px-5 py-4 transition-colors ${
+          className={`flex md:w-56 flex-col justify-center items-center md:items-start px-5 py-4 transition-colors ${
             hasDetails ? "cursor-pointer hover:bg-[rgba(200,30,30,0.04)]" : ""
           }`}
         >
-          <div className="flex items-center justify-between mb-3">
-            <p className="text-[11px] font-serif uppercase tracking-[0.28em] text-[rgba(160,125,55,0.6)]">
+          <div className="flex items-center justify-between mb-3 w-full">
+            <p className="text-[11px] font-serif uppercase tracking-[0.28em] text-[rgba(160,125,55,0.6)] w-full text-center md:text-left">
               Strikes Académicos
             </p>
             {clamped >= 2 && (
