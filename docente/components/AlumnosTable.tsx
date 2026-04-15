@@ -42,8 +42,8 @@ export default function AlumnosTable({ rows, courseId, bimestre }: Props) {
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex items-center gap-3">
-        <div className="relative w-full max-w-sm">
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="relative min-w-0 flex-1">
           <Search
             size={14}
             className="absolute left-3 top-1/2 -translate-y-1/2 text-[rgba(160,125,55,0.5)]"
@@ -86,7 +86,7 @@ export default function AlumnosTable({ rows, courseId, bimestre }: Props) {
         </div>
       ) : (
         <div className="chronicle-stone relative overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="min-w-[700px] w-full text-sm">
             <thead className="text-left text-[11px] font-serif uppercase tracking-[0.15em]" style={{ background: "rgba(160,125,55,0.07)", borderBottom: "1px solid rgba(160,125,55,0.18)" }}>
               <tr>
                 <th className="px-4 py-3 text-[rgba(160,125,55,0.65)]">Alumno</th>

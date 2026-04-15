@@ -46,37 +46,55 @@ export default async function TeacherLayout({
         <TeacherSidebar teacherName={teacherName} teacherImage={teacherImage} />
       </Suspense>
       <div className="flex flex-1 flex-col overflow-hidden">
-        <header className="relative flex items-center justify-between bg-[#0c0d11] px-6 py-4">
+        <header className="relative bg-[#0c0d11] px-4 md:px-6">
           {/* Top glow line */}
           <div className="pointer-events-none absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[rgba(200,168,75,0.35)] to-transparent" />
           {/* Bottom gold divider */}
           <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[rgba(160,125,55,0.45)] to-transparent" />
 
-          <div className="flex shrink-0 items-center gap-3">
-            <div className="hidden md:block h-px w-5 bg-[rgba(160,125,55,0.4)]" />
-            <span className="font-serif text-base uppercase tracking-[0.22em] text-[rgba(200,168,75,0.85)]">
+          {/* Mobile: title + avatar only (no tabs — navigate via sidebar) */}
+          <div className="flex items-center justify-between py-3 md:hidden">
+            <span className="font-serif text-sm uppercase tracking-[0.22em] text-[rgba(200,168,75,0.85)]">
               Panel Docente
             </span>
-            <div className="hidden md:block h-px w-5 bg-[rgba(160,125,55,0.4)]" />
+            <div className="flex shrink-0 items-center gap-2">
+              {teacherImage ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={teacherImage} alt={teacherName} className="h-7 w-7 border border-[rgba(160,125,55,0.3)]" style={{ clipPath: "polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%)" }} />
+              ) : (
+                <div className="flex h-7 w-7 items-center justify-center border border-[rgba(160,125,55,0.3)] bg-[rgba(160,125,55,0.06)] text-sm font-medium text-[#c9a227]" style={{ clipPath: "polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%)" }}>
+                  {teacherName[0]}
+                </div>
+              )}
+            </div>
           </div>
 
-          <Suspense fallback={null}>
-            <TeacherHeaderTabs courses={courses} />
-          </Suspense>
-
-          <div className="flex shrink-0 items-center gap-3">
-            {teacherImage ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={teacherImage} alt={teacherName} className="h-8 w-8 border border-[rgba(160,125,55,0.3)]" style={{ clipPath: "polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%)" }} />
-            ) : (
-              <div className="flex h-8 w-8 items-center justify-center border border-[rgba(160,125,55,0.3)] bg-[rgba(160,125,55,0.06)] text-sm font-medium text-[#c9a227]" style={{ clipPath: "polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%)" }}>
-                {teacherName[0]}
-              </div>
-            )}
-            <span className="hidden md:block text-sm font-serif text-[rgba(200,168,75,0.65)]">{teacherName}</span>
+          {/* Desktop: title + tabs + avatar in one row */}
+          <div className="hidden md:flex items-center justify-between py-4">
+            <div className="flex shrink-0 items-center gap-3">
+              <div className="h-px w-5 bg-[rgba(160,125,55,0.4)]" />
+              <span className="font-serif text-base uppercase tracking-[0.22em] text-[rgba(200,168,75,0.85)]">
+                Panel Docente
+              </span>
+              <div className="h-px w-5 bg-[rgba(160,125,55,0.4)]" />
+            </div>
+            <Suspense fallback={null}>
+              <TeacherHeaderTabs courses={courses} />
+            </Suspense>
+            <div className="flex shrink-0 items-center gap-3">
+              {teacherImage ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={teacherImage} alt={teacherName} className="h-8 w-8 border border-[rgba(160,125,55,0.3)]" style={{ clipPath: "polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%)" }} />
+              ) : (
+                <div className="flex h-8 w-8 items-center justify-center border border-[rgba(160,125,55,0.3)] bg-[rgba(160,125,55,0.06)] text-sm font-medium text-[#c9a227]" style={{ clipPath: "polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%)" }}>
+                  {teacherName[0]}
+                </div>
+              )}
+              <span className="text-sm font-serif text-[rgba(200,168,75,0.65)]">{teacherName}</span>
+            </div>
           </div>
         </header>
-        <main className="flex-1 overflow-y-auto p-6 md:p-8">{children}</main>
+        <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-8">{children}</main>
         <Footer />
       </div>
     </div>

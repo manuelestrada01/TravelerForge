@@ -44,10 +44,10 @@ export default function TalentGranter({ courseId, studentEmail, grantedTalentIds
             key={talent.id}
             onClick={() => toggle(talent.id)}
             disabled={loading === talent.id}
-            className={`flex items-center justify-between rounded-lg px-3 py-2 text-left text-xs transition-colors disabled:opacity-50 ${
+            className={`flex items-center justify-between border px-3 py-2 text-left text-xs transition-colors disabled:opacity-50 ${
               isGranted
-                ? "bg-[#c9a227]/15 text-[#c9a227] ring-1 ring-[#c9a227]/40"
-                : "bg-[#0d1a0f] text-[#9aab8a] hover:bg-[#1e3320]"
+                ? "border-[rgba(200,168,75,0.5)] bg-[rgba(200,168,75,0.1)] text-[rgba(200,168,75,0.95)]"
+                : "border-[rgba(160,125,55,0.2)] bg-[rgba(160,125,55,0.03)] text-[rgba(232,224,208,0.45)] hover:border-[rgba(160,125,55,0.35)] hover:text-[rgba(232,224,208,0.7)]"
             }`}
           >
             <span>{talent.name}</span>

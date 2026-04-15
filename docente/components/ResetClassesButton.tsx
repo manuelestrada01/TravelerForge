@@ -39,13 +39,13 @@ export default function ResetClassesButton({ courseId, label }: Props) {
       <div className="flex items-center gap-3">
         <button
           onClick={() => { setOpen(true); setResult(null); setError(null); }}
-          className="flex items-center gap-2 rounded-lg border border-[#c9a227]/40 px-4 py-2 text-sm text-[#c9a227] hover:bg-[#c9a227]/10 transition-colors"
+          className="flex items-center gap-2 border border-[rgba(200,168,75,0.4)] px-4 py-2 text-[11px] font-serif uppercase tracking-[0.18em] text-[rgba(200,168,75,0.85)] transition-colors hover:bg-[rgba(200,168,75,0.08)]"
         >
-          <RotateCcw size={14} />
+          <RotateCcw size={13} />
           {label ?? "Reiniciar clases formativas"}
         </button>
         {result !== null && (
-          <span className="text-xs text-[#8fbc8f]">
+          <span className="text-xs text-[rgba(160,125,55,0.7)]">
             {result.count === 0
               ? "No había clases asignadas."
               : `${result.count} alumno${result.count !== 1 ? "s" : ""} reiniciado${result.count !== 1 ? "s" : ""}.`}
@@ -54,58 +54,66 @@ export default function ResetClassesButton({ courseId, label }: Props) {
       </div>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className="relative w-full max-w-md rounded-xl border border-[#1e3320] bg-[#0d1a0f] p-6 shadow-2xl">
-            <button
-              onClick={() => setOpen(false)}
-              className="absolute right-4 top-4 text-[#9aab8a] hover:text-[#f5f0e8]"
-            >
-              <X size={16} />
-            </button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+          <div className="chronicle-stone relative w-full max-w-md p-6 shadow-2xl">
+            <div className="pointer-events-none absolute left-0 top-0 h-8 w-8 border-l-2 border-t-2 border-[rgba(200,168,75,0.4)]" />
+            <div className="pointer-events-none absolute right-0 top-0 h-8 w-8 border-r-2 border-t-2 border-[rgba(200,168,75,0.4)]" />
+            <div className="pointer-events-none absolute bottom-0 left-0 h-8 w-8 border-b-2 border-l-2 border-[rgba(200,168,75,0.4)]" />
+            <div className="pointer-events-none absolute bottom-0 right-0 h-8 w-8 border-b-2 border-r-2 border-[rgba(200,168,75,0.4)]" />
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(212,160,23,0.04)_0%,transparent_60%)]" />
 
-            <div className="flex items-start gap-3">
-              <AlertTriangle size={20} className="mt-0.5 shrink-0 text-[#c9a227]" />
-              <div>
-                <h2 className="font-serif text-lg text-[#f5f0e8]">
-                  Reiniciar clases formativas
-                </h2>
-                <p className="mt-2 text-sm text-[#9aab8a]">
-                  {courseId
-                    ? "Esto eliminará la clase formativa activa de todos los alumnos de este curso. Cada alumno deberá elegir nuevamente."
-                    : "Esto eliminará la clase formativa activa de todos los alumnos del sistema. Cada alumno deberá elegir nuevamente."}
-                </p>
-                <p className="mt-1 text-sm text-[#9aab8a]">
-                  El historial de clases anteriores se conserva.
-                </p>
-              </div>
-            </div>
-
-            {error && (
-              <p className="mt-4 rounded-lg bg-[#c0392b]/10 px-3 py-2 text-sm text-[#c0392b]">
-                {error}
-              </p>
-            )}
-
-            <div className="mt-6 flex justify-end gap-3">
+            <div className="relative z-10">
               <button
                 onClick={() => setOpen(false)}
-                disabled={loading}
-                className="rounded-lg px-4 py-2 text-sm text-[#9aab8a] hover:text-[#f5f0e8] disabled:opacity-50"
+                className="absolute right-0 top-0 text-[rgba(160,125,55,0.5)] hover:text-[rgba(232,224,208,0.7)]"
               >
-                Cancelar
+                <X size={16} />
               </button>
-              <button
-                onClick={handleConfirm}
-                disabled={loading}
-                className="flex items-center gap-2 rounded-lg bg-[#c9a227] px-4 py-2 text-sm font-medium text-[#0d1a0f] hover:bg-[#c9a227]/80 disabled:opacity-50"
-              >
-                {loading ? (
-                  <RotateCcw size={14} className="animate-spin" />
-                ) : (
-                  <RotateCcw size={14} />
-                )}
-                Confirmar reinicio
-              </button>
+
+              <div className="flex items-start gap-3">
+                <AlertTriangle size={18} className="mt-0.5 shrink-0 text-[rgba(200,168,75,0.8)]" />
+                <div>
+                  <h2 className="font-serif text-base uppercase tracking-[0.1em] text-[rgba(232,224,208,0.9)]">
+                    Reiniciar clases formativas
+                  </h2>
+                  <p className="mt-2 text-sm text-[rgba(160,125,55,0.65)]">
+                    {courseId
+                      ? "Esto eliminará la clase formativa activa de todos los alumnos de este curso. Cada alumno deberá elegir nuevamente."
+                      : "Esto eliminará la clase formativa activa de todos los alumnos del sistema. Cada alumno deberá elegir nuevamente."}
+                  </p>
+                  <p className="mt-1 text-sm text-[rgba(160,125,55,0.5)]">
+                    El historial de clases anteriores se conserva.
+                  </p>
+                </div>
+              </div>
+
+              {error && (
+                <p className="mt-4 border border-[#c0392b]/30 bg-[#c0392b]/10 px-3 py-2 text-sm text-[#c0392b]">
+                  {error}
+                </p>
+              )}
+
+              <div className="mt-6 flex justify-end gap-3">
+                <button
+                  onClick={() => setOpen(false)}
+                  disabled={loading}
+                  className="px-4 py-2 text-[11px] font-serif uppercase tracking-[0.15em] text-[rgba(160,125,55,0.55)] hover:text-[rgba(232,224,208,0.7)] disabled:opacity-50"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleConfirm}
+                  disabled={loading}
+                  className="flex items-center gap-2 border border-[rgba(200,168,75,0.45)] bg-[rgba(200,168,75,0.12)] px-4 py-2 text-[11px] font-serif uppercase tracking-[0.15em] text-[rgba(200,168,75,0.9)] transition-opacity hover:bg-[rgba(200,168,75,0.18)] disabled:opacity-50"
+                >
+                  {loading ? (
+                    <RotateCcw size={13} className="animate-spin" />
+                  ) : (
+                    <RotateCcw size={13} />
+                  )}
+                  Confirmar reinicio
+                </button>
+              </div>
             </div>
           </div>
         </div>

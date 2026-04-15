@@ -40,16 +40,19 @@ export default function AddCourseForm({ availableCourses }: Props) {
   return (
     <form onSubmit={handleSubmit} className="max-w-md space-y-4">
       <div>
-        <label className="mb-1 block text-xs text-[#9aab8a]">Curso de Classroom</label>
+        <label className="mb-1 block text-[10px] font-serif uppercase tracking-[0.18em] text-[rgba(160,125,55,0.6)]">
+          Curso de Classroom
+        </label>
         <select
           value={selectedId}
           onChange={(e) => setSelectedId(e.target.value)}
           required
-          className="w-full rounded-lg border border-[#1e3320] bg-[#1a2e1c] px-3 py-2 text-sm text-[#f5f0e8] outline-none focus:border-[#c9a227]"
+          className="w-full border border-[rgba(160,125,55,0.25)] bg-[rgba(160,125,55,0.04)] px-3 py-2 text-sm text-[rgba(232,224,208,0.85)] outline-none focus:border-[rgba(200,168,75,0.5)]"
+          style={{ colorScheme: "dark" }}
         >
-          <option value="">Seleccioná un curso...</option>
+          <option value="" style={{ background: "#0c0d11" }}>Seleccioná un curso...</option>
           {availableCourses.map((c) => (
-            <option key={c.id} value={c.id!}>
+            <option key={c.id} value={c.id!} style={{ background: "#0c0d11" }}>
               {c.name} {c.section ? `— ${c.section}` : ""}
             </option>
           ))}
@@ -61,7 +64,7 @@ export default function AddCourseForm({ availableCourses }: Props) {
       <button
         type="submit"
         disabled={loading || !selectedId}
-        className="rounded-lg bg-[#c9a227] px-4 py-2 text-sm font-medium text-[#0d1a0f] transition-opacity disabled:opacity-50"
+        className="border border-[rgba(200,168,75,0.45)] bg-[rgba(200,168,75,0.1)] px-5 py-2 text-[11px] font-serif uppercase tracking-[0.18em] text-[rgba(200,168,75,0.9)] transition-opacity hover:bg-[rgba(200,168,75,0.15)] disabled:opacity-40"
       >
         {loading ? "Registrando..." : "Registrar curso"}
       </button>

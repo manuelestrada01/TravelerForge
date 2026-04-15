@@ -218,6 +218,10 @@ body {
   .scripture-corners::before { top: 8px; left: 8px; }
   .scripture-corners::after  { bottom: 8px; right: 8px; }
 
+  /* ── Hide scrollbar utility ── */
+  .scrollbar-hide { scrollbar-width: none; }
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+
   /* ── Medieval scrollbar for talent lists ── */
   .chronicle-scroll::-webkit-scrollbar { width: 4px; }
   .chronicle-scroll::-webkit-scrollbar-track { background: rgba(7,8,12,0.5); }
