@@ -1,6 +1,8 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
+import Credentials from "next-auth/providers/credentials";
 import { saveTeacherToken } from "@/lib/supabase/teacher-tokens";
+import { DEMO_EMAIL, DEMO_NAME } from "@/lib/demo/data";
 
 async function refreshAccessToken(refreshToken: string) {
   const res = await fetch("https://oauth2.googleapis.com/token", {
@@ -23,6 +25,12 @@ async function refreshAccessToken(refreshToken: string) {
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
+    Credentials({
+      credentials: {},
+      async authorize() {
+        return { id: DEMO_EMAIL, name: DEMO_NAME, email: DEMO_EMAIL, image: null };
+      },
+    }),
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
@@ -49,6 +57,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
   callbacks: {
     async jwt({ token, account }) {
+      // Demo user — no tokens needed
+      if (token.email === DEMO_EMAIL) return token;
+
       // Login inicial
       if (account) {
         if (account.refresh_token && token.email) {

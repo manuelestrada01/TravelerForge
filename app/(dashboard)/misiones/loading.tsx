@@ -1,25 +1,18 @@
 export default function MisionesLoading() {
   return (
-    <div className="w-full px-12 py-12 min-h-screen animate-pulse">
-      <div className="mb-12">
-        <div className="h-3 w-24 bg-[#1e3320] rounded mb-3" />
-        <div className="h-12 w-80 bg-[#1e3320] rounded mb-3" />
-        <div className="h-4 w-96 bg-[#1e3320] rounded" />
+    <div className="w-full max-w-4xl mx-auto px-8 py-12 flex flex-col gap-8 animate-pulse">
+      <div className="flex flex-col items-center gap-3">
+        <div className="h-3 w-24 bg-[#131720]" />
+        <div className="h-10 w-72 bg-[#131720]" />
+        <div className="h-px w-32 bg-[#131720]" />
       </div>
-
-      <div className="grid grid-cols-12 gap-8 items-start">
-        <div className="col-span-12 lg:col-span-8 flex flex-col gap-3">
-          <div className="h-6 w-48 bg-[#1e3320] rounded mb-3" />
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-20 bg-[#1a2e1c]/80 rounded-lg border-l-2 border-[#8fbc8f]/20" />
-          ))}
-        </div>
-
-        <div className="col-span-12 lg:col-span-4 flex flex-col gap-6">
-          <div className="h-44 bg-[#1a2e1c]/60 rounded-lg" />
-          <div className="h-36 bg-[#1a2e1c]/40 rounded-lg" />
-        </div>
+      <div className="h-20 bg-[#131720]" />
+      <div className="grid grid-cols-2 gap-3">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="h-24 bg-[#131720]" />
+        ))}
       </div>
+      <div className="h-48 bg-[#131720]" />
     </div>
   );
 }

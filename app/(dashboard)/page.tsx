@@ -14,6 +14,12 @@ import StatusBar from "@/dashboard/components/StatusBar";
 import TalentsCard from "@/talentos/components/TalentsCard";
 import { ALL_TALENTS } from "@/talentos/types";
 import { ActivityEntry } from "@/xp/types";
+import {
+  DEMO_EMAIL, DEMO_NAME, DEMO_CLASS,
+  DEMO_XP, DEMO_LEVEL, DEMO_LEVEL_NAME,
+  DEMO_XP_CURRENT_LEVEL, DEMO_XP_NEXT_LEVEL,
+  DEMO_STRIKES, DEMO_BLOCKED, DEMO_TALENTS, DEMO_ACTIVITY, DEMO_STRIKE_DETAILS,
+} from "@/lib/demo/data";
 
 export default async function DashboardPage({
   searchParams,
@@ -24,6 +30,37 @@ export default async function DashboardPage({
   const session = await auth();
   const email = session?.user?.email ?? "";
   const defaultName = session?.user?.name?.split(" ")[0] ?? "Estudiante";
+
+  // Demo mode — return mock data directly, no Supabase/Classroom calls
+  if (email === DEMO_EMAIL) {
+    return (
+      <DashboardAnimatedWrapper>
+        <HeroSection
+          studentName={DEMO_NAME.split(" ")[0]}
+          classEntry={DEMO_CLASS}
+          level={DEMO_LEVEL}
+          levelName={DEMO_LEVEL_NAME}
+          talents={DEMO_TALENTS}
+        />
+        <StatusBar
+          xp={DEMO_XP}
+          xpCurrentLevel={DEMO_XP_CURRENT_LEVEL}
+          xpNextLevel={DEMO_XP_NEXT_LEVEL}
+          level={DEMO_LEVEL}
+          levelName={DEMO_LEVEL_NAME}
+          studentName={DEMO_NAME.split(" ")[0]}
+          blocked={DEMO_BLOCKED}
+          strikes={DEMO_STRIKES}
+          strikeDetails={DEMO_STRIKE_DETAILS}
+        />
+        <div className="grid grid-cols-3 gap-4 items-stretch">
+          <ActivityFeed entries={DEMO_ACTIVITY} />
+          <VerseOfDay />
+          <TalentsCard talents={DEMO_TALENTS} />
+        </div>
+      </DashboardAnimatedWrapper>
+    );
+  }
 
   let studentName = defaultName;
   let formativeClassSlug = "erudito";

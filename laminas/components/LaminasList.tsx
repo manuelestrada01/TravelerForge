@@ -33,7 +33,7 @@ function BimestreTable({ laminas }: { laminas: Lamina[] }) {
       {/* Header row */}
       <div className="grid grid-cols-[72px_1fr_110px_110px_110px_72px] gap-4 border-b border-[rgba(160,125,55,0.15)] px-5 py-2.5">
         {["Tipo", "Tarea", "Vencimiento", "Entregado", "Estado", "XP"].map((col) => (
-          <p key={col} className="text-[8px] font-serif uppercase tracking-[0.25em] text-[rgba(160,125,55,0.45)]">
+          <p key={col} className="text-[10px] font-serif uppercase tracking-[0.25em] text-[rgba(160,125,55,0.45)]">
             {col}
           </p>
         ))}
@@ -51,32 +51,32 @@ function BimestreTable({ laminas }: { laminas: Lamina[] }) {
               } ${isPending ? "opacity-45" : ""}`}
             >
               {/* Type badge — straight */}
-              <span className="w-fit px-2 py-0.5 text-[9px] font-serif uppercase tracking-[0.18em] text-[rgba(160,125,55,0.6)] border border-[rgba(160,125,55,0.2)] bg-[rgba(160,125,55,0.06)]">
+              <span className="w-fit px-2 py-0.5 text-[11px] font-serif uppercase tracking-[0.18em] text-[rgba(160,125,55,0.6)] border border-[rgba(160,125,55,0.2)] bg-[rgba(160,125,55,0.06)]">
                 {lamina.productionType}
               </span>
 
               {/* Title */}
               <div className="min-w-0">
-                <p className="font-serif text-sm text-[rgba(232,224,208,0.8)] leading-tight truncate">{lamina.title}</p>
+                <p className="font-serif text-[17px] text-[rgba(232,224,208,0.8)] leading-tight truncate">{lamina.title}</p>
                 <div className="flex items-center gap-2 mt-0.5">
                   {lamina.strikeAdded && (
-                    <p className="text-[9px] font-serif text-danger uppercase tracking-wider">+1 Strike</p>
+                    <p className="text-[11px] font-serif text-danger uppercase tracking-wider">+1 Strike</p>
                   )}
                   {lamina.isEarly && (
-                    <p className="text-[9px] font-serif text-[#c8a84b]/70 uppercase tracking-wider">◆ Anticipada</p>
+                    <p className="text-[11px] font-serif text-[#c8a84b]/70 uppercase tracking-wider">◆ Anticipada</p>
                   )}
                 </div>
               </div>
 
-              <p className="font-serif text-xs text-[rgba(160,125,55,0.45)]">{lamina.dueDate ? formatDate(lamina.dueDate) : "—"}</p>
-              <p className="font-serif text-xs text-[rgba(160,125,55,0.45)]">{lamina.submittedAt ? formatDate(lamina.submittedAt) : "—"}</p>
+              <p className="font-serif text-[15px] text-[rgba(160,125,55,0.45)]">{lamina.dueDate ? formatDate(lamina.dueDate) : "—"}</p>
+              <p className="font-serif text-[15px] text-[rgba(160,125,55,0.45)]">{lamina.submittedAt ? formatDate(lamina.submittedAt) : "—"}</p>
 
               {/* Status pill — straight */}
-              <span className={`w-fit border px-2 py-0.5 text-[9px] font-serif ${status.bg} ${status.border} ${status.color}`}>
+              <span className={`w-fit border px-2 py-0.5 text-[11px] font-serif ${status.bg} ${status.border} ${status.color}`}>
                 {status.label}
               </span>
 
-              <p className={`font-serif text-sm font-bold tabular-nums ${lamina.xpEarned ? "text-[#c8a84b]" : "text-[rgba(160,125,55,0.25)]"}`}>
+              <p className={`font-serif text-[17px] font-bold tabular-nums ${lamina.xpEarned ? "text-[#c8a84b]" : "text-[rgba(160,125,55,0.25)]"}`}>
                 {lamina.xpEarned ? `+${lamina.xpEarned}` : "—"}
               </p>
             </div>
@@ -108,7 +108,7 @@ export default function LaminasList({ laminas, activeBimestre }: LaminasListProp
         ].map(({ label, value, color }) => (
           <div
             key={label}
-            className="relative p-4 overflow-hidden"
+            className="relative p-4 overflow-hidden flex flex-col items-center justify-center"
             style={{
               background: `${STONE_NOISE}, linear-gradient(170deg, #141209 0%, #0e0d07 100%)`,
               border: "1px solid rgba(160,125,55,0.28)",
@@ -116,8 +116,8 @@ export default function LaminasList({ laminas, activeBimestre }: LaminasListProp
           >
             <div className="pointer-events-none absolute inset-[4px] border border-[rgba(160,125,55,0.07)]" />
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(200,148,40,0.05)_0%,transparent_55%)]" />
-            <p className="relative text-[8px] font-serif uppercase tracking-[0.28em] text-[rgba(160,125,55,0.45)] mb-1.5">{label}</p>
-            <p className={`relative font-serif text-2xl font-bold ${color}`}>{value}</p>
+            <p className="relative text-[10px] font-serif uppercase tracking-[0.28em] text-[rgba(160,125,55,0.45)] mb-1.5 text-center">{label}</p>
+            <p className={`relative font-serif text-[30px] font-bold text-center ${color}`}>{value}</p>
           </div>
         ))}
       </div>
@@ -127,10 +127,10 @@ export default function LaminasList({ laminas, activeBimestre }: LaminasListProp
         <section className="flex flex-col gap-3">
           <div className="flex items-center gap-3">
             <div className="gold-divider w-6" />
-            <p className="text-[9px] font-serif uppercase tracking-[0.28em] text-[#c8a84b] shrink-0">
+            <p className="text-[11px] font-serif uppercase tracking-[0.28em] text-[#c8a84b] shrink-0">
               {activeBimestre}
             </p>
-            <span className="text-[8px] font-serif uppercase tracking-[0.18em] text-[rgba(200,168,75,0.6)] border border-[rgba(160,125,55,0.28)] bg-[rgba(160,125,55,0.08)] px-2 py-0.5">
+            <span className="text-[10px] font-serif uppercase tracking-[0.18em] text-[rgba(200,168,75,0.6)] border border-[rgba(160,125,55,0.28)] bg-[rgba(160,125,55,0.08)] px-2 py-0.5">
               Activo
             </span>
             <div className="gold-divider flex-1" />
@@ -146,7 +146,7 @@ export default function LaminasList({ laminas, activeBimestre }: LaminasListProp
           <section key={bim} className="flex flex-col gap-3">
             <div className="flex items-center gap-2">
               <div className="h-px w-6 bg-gradient-to-r from-transparent to-[rgba(160,125,55,0.2)]" />
-              <p className="text-[9px] font-serif uppercase tracking-[0.25em] text-[rgba(160,125,55,0.35)] shrink-0">{bim}</p>
+              <p className="text-[11px] font-serif uppercase tracking-[0.25em] text-[rgba(160,125,55,0.35)] shrink-0">{bim}</p>
               <div className="h-px flex-1 bg-gradient-to-r from-[rgba(160,125,55,0.2)] to-transparent" />
             </div>
             <BimestreTable laminas={rows} />
@@ -155,7 +155,7 @@ export default function LaminasList({ laminas, activeBimestre }: LaminasListProp
       })}
 
       {laminas.length === 0 && (
-        <p className="font-serif text-sm italic text-[rgba(160,125,55,0.4)] text-center py-12">
+        <p className="font-serif text-[17px] italic text-[rgba(160,125,55,0.4)] text-center py-12">
           Todavía no hay entregas registradas.
         </p>
       )}

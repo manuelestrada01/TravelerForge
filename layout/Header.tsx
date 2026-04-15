@@ -1,9 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useSearchParams } from "next/navigation";
-import { Bell } from "lucide-react";
 
 interface CourseTab {
   id: string;
@@ -16,7 +14,7 @@ interface HeaderProps {
   studentImage?: string | null;
 }
 
-export default function Header({ courses, studentName, studentImage }: HeaderProps) {
+export default function Header({ courses, studentName: _studentName, studentImage: _studentImage }: HeaderProps) {
   const searchParams = useSearchParams();
   const activeCourseId = searchParams.get("courseId") ?? courses[0]?.id ?? "";
 
@@ -35,10 +33,10 @@ export default function Header({ courses, studentName, studentImage }: HeaderPro
       <div className="flex items-center gap-5">
         {/* Logo */}
         <div className="flex flex-col leading-none select-none">
-          <span className="font-serif text-sm font-bold tracking-[0.06em] text-[#c8a84b] gold-glow-sm">
-            LEVELUP
+          <span className="font-serif text-xl font-bold tracking-[0.06em] text-[#c8a84b] gold-glow-sm">
+            TRAVELERFORGE
           </span>
-          <span className="text-[7px] font-serif uppercase tracking-[0.28em] text-[rgba(160,125,55,0.45)]">
+          <span className="text-[10px] font-serif uppercase tracking-[0.28em] text-[rgba(160,125,55,0.45)]">
             Visor Académico
           </span>
         </div>
@@ -74,33 +72,6 @@ export default function Header({ courses, studentName, studentImage }: HeaderPro
         </nav>
       </div>
 
-      {/* ── Right: bell + avatar ── */}
-      <div className="flex items-center gap-2">
-        {/* Bell — square button */}
-        <button
-          className="relative flex h-7 w-7 items-center justify-center text-[rgba(136,153,170,0.5)] hover:text-[#c8a84b] hover:bg-[rgba(200,168,75,0.06)] transition-colors"
-          style={{ border: "1px solid rgba(160,125,55,0.12)" }}
-        >
-          <Bell size={14} strokeWidth={1.4} />
-        </button>
-
-        {/* Avatar — square heraldic frame */}
-        <div
-          className="flex h-7 w-7 items-center justify-center overflow-hidden"
-          style={{
-            border: "1px solid rgba(160,125,55,0.4)",
-            background: "rgba(160,125,55,0.1)",
-          }}
-        >
-          {studentImage ? (
-            <Image src={studentImage} alt={studentName} width={28} height={28} className="h-full w-full object-cover" />
-          ) : (
-            <span className="font-serif text-xs font-semibold text-[#c8a84b]">
-              {studentName.charAt(0)}
-            </span>
-          )}
-        </div>
-      </div>
     </header>
   );
 }

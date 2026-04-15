@@ -127,16 +127,16 @@ export default function ClasesFormativasView({
           <GraduationCap size={22} strokeWidth={1.3} className="text-[#c8a84b]" />
         </div>
 
-        <p className="mb-1 text-[9px] font-serif uppercase tracking-[0.32em] text-[rgba(160,125,55,0.5)]">
+        <p className="mb-1 text-[11px] font-serif uppercase tracking-[0.32em] text-[rgba(160,125,55,0.5)]">
           Especialización de Gremio
         </p>
         <h1 className="font-serif text-3xl font-bold text-[rgba(232,224,208,0.9)]">Clases Formativas</h1>
         <div className="my-3 flex items-center gap-3">
           <div className="h-px w-12 bg-gradient-to-r from-transparent to-[rgba(160,125,55,0.35)]" />
-          <span className="text-[rgba(160,125,55,0.3)] text-[8px]">✦</span>
+          <span className="text-[rgba(160,125,55,0.3)] text-[10px]">✦</span>
           <div className="h-px w-12 bg-gradient-to-l from-transparent to-[rgba(160,125,55,0.35)]" />
         </div>
-        <p className="max-w-[400px] text-[11px] font-serif leading-relaxed text-[rgba(160,125,55,0.4)] italic">
+        <p className="max-w-[400px] text-[14px] font-serif leading-relaxed text-[rgba(160,125,55,0.4)] italic">
           "Porque muchos son llamados, más pocos son los escogidos."
           <br />
           <span className="not-italic text-[rgba(160,125,55,0.3)]">— Arquetipos del Conocimiento</span>
@@ -153,7 +153,7 @@ export default function ClasesFormativasView({
         >
           <div className="flex items-center gap-3 mb-3">
             <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[rgba(160,125,55,0.3)] to-transparent" />
-            <p className="text-[9px] font-serif uppercase tracking-[0.3em] text-[#c8a84b] shrink-0">Tu Clase Activa</p>
+            <p className="text-[11px] font-serif uppercase tracking-[0.3em] text-[#c8a84b] shrink-0">Tu Clase Activa</p>
             <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[rgba(160,125,55,0.3)] to-transparent" />
           </div>
           <HeroClassCard cls={activeClass} onOpen={handleOpen} />
@@ -312,7 +312,7 @@ function HeroClassCard({ cls, onOpen }: {
             ))}
           </div>
 
-          <p className="text-[13px] font-serif leading-relaxed text-[rgba(160,125,55,0.55)]">{cls.description}</p>
+          <p className="text-[16px] font-serif leading-relaxed text-[rgba(160,125,55,0.55)]">{cls.description}</p>
         </div>
       </div>
 
@@ -391,7 +391,7 @@ function GridClassCard({ cls, isActive, onOpen }: {
         </div>
       </div>
 
-      <p className="relative flex-1 text-[12px] font-serif leading-relaxed text-[rgba(160,125,55,0.5)]">
+      <p className="relative flex-1 text-[15px] font-serif leading-relaxed text-[rgba(160,125,55,0.5)]">
         {cls.description}
       </p>
 
@@ -486,7 +486,7 @@ function ClassCardFront({ cls, isActive, onFlip }: {
         ))}
       </div>
 
-      <p data-el className="relative flex-1 text-[13px] font-serif leading-relaxed text-[rgba(160,125,55,0.55)]">
+      <p data-el className="relative flex-1 text-[16px] font-serif leading-relaxed text-[rgba(160,125,55,0.55)]">
         {cls.description}
       </p>
 

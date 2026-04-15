@@ -3,11 +3,33 @@ import { getVisibleCourseIds, getCoursesByIds } from "@/lib/supabase/courses";
 import { getCourseRanking } from "@/lib/supabase/comunidad";
 import DashboardAnimatedWrapper from "@/dashboard/components/DashboardAnimatedWrapper";
 import RankingList from "@/comunidad/components/RankingList";
-import { Users } from "lucide-react";
+import { DEMO_EMAIL, DEMO_RANKING } from "@/lib/demo/data";
 
 export default async function ComunidadPage() {
   const session = await auth();
   const email = session?.user?.email ?? "";
+
+  if (email === DEMO_EMAIL) {
+    return (
+      <DashboardAnimatedWrapper>
+        <div className="max-w-5xl mx-auto flex flex-col gap-8">
+          <header className="pb-6 text-center">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-gold/60 mb-1">
+              ◆ 1 | Tecnología de la Representación ◆
+            </p>
+            <h1 className="font-serif text-4xl text-cream tracking-tight">
+              Gremio del Conocimiento
+            </h1>
+            <div className="mt-3 gold-divider w-32 mx-auto" />
+            <p className="mt-4 text-[16px] font-serif text-[rgba(160,125,55,0.5)] max-w-md mx-auto leading-relaxed">
+              Ranking de resonancia del gremio. Solo XP y nivel son visibles — el recorrido de cada uno es personal.
+            </p>
+          </header>
+          <RankingList entries={DEMO_RANKING} currentEmail={DEMO_EMAIL} />
+        </div>
+      </DashboardAnimatedWrapper>
+    );
+  }
 
   const visibleIds = await getVisibleCourseIds();
   const [ranking, courses] = await Promise.all([
@@ -19,25 +41,22 @@ export default async function ComunidadPage() {
 
   return (
     <DashboardAnimatedWrapper>
-      <header className="pb-6 border-b border-[#1e3320]">
-        <p className="mb-1 text-[10px] font-medium uppercase tracking-[0.2em] text-[#9aab8a]">
-          {courseName}
-        </p>
-        <div className="flex items-end justify-between gap-4">
-          <h1 className="font-serif text-4xl font-bold text-[#f5f0e8] tracking-tight">
+      <div className="max-w-5xl mx-auto flex flex-col gap-8">
+        <header className="pb-6 text-center">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-gold/60 mb-1">
+            ◆ {courseName} ◆
+          </p>
+          <h1 className="font-serif text-4xl text-cream tracking-tight">
             Gremio del Conocimiento
           </h1>
-          <div className="flex items-center gap-2 text-[#9aab8a]/60 text-sm">
-            <Users size={14} strokeWidth={1.5} />
-            <span>{ranking.length} estudiante{ranking.length !== 1 ? "s" : ""}</span>
-          </div>
-        </div>
-        <p className="mt-2 text-sm text-[#9aab8a] max-w-lg">
-          Ranking de resonancia del gremio. Solo XP y nivel son visibles — el recorrido de cada uno es personal.
-        </p>
-      </header>
+          <div className="mt-3 gold-divider w-32 mx-auto" />
+          <p className="mt-4 text-[16px] font-serif text-[rgba(160,125,55,0.5)] max-w-md mx-auto leading-relaxed">
+            Ranking de resonancia del gremio. Solo XP y nivel son visibles — el recorrido de cada uno es personal.
+          </p>
+        </header>
 
-      <RankingList entries={ranking} currentEmail={email} />
+        <RankingList entries={ranking} currentEmail={email} />
+      </div>
     </DashboardAnimatedWrapper>
   );
 }

@@ -1,10 +1,11 @@
 import { auth } from "@/auth";
-import { getVisibleCourseIds, getCourseById, getCourseworkConfig } from "@/lib/supabase/courses";
+import { getVisibleCourseIds, getCourseworkConfig } from "@/lib/supabase/courses";
 import { getAllDeliveriesForStudentByCourses, getStrikesForStudentByCourses } from "@/lib/supabase/game";
 import { getStudentGameStateByEmail } from "@/lib/supabase/game";
 import LaminasList from "@/laminas/components/LaminasList";
 import DashboardAnimatedWrapper from "@/dashboard/components/DashboardAnimatedWrapper";
 import type { Lamina, LaminaStatus } from "@/laminas/types";
+import { DEMO_EMAIL, DEMO_BIMESTRE, DEMO_LAMINAS } from "@/lib/demo/data";
 
 function mapStatus(s: "OK" | "LATE" | "MISSING" | "PENDING"): LaminaStatus {
   if (s === "OK") return "entregada";
@@ -13,9 +14,36 @@ function mapStatus(s: "OK" | "LATE" | "MISSING" | "PENDING"): LaminaStatus {
   return "no_entregada";
 }
 
+function PageShell({ bimestre, children }: { bimestre: string; children: React.ReactNode }) {
+  return (
+    <DashboardAnimatedWrapper>
+      <div className="max-w-5xl mx-auto flex flex-col gap-8">
+        <header className="pb-6 text-center">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-gold/60 mb-1">
+            ◆ Registro de Producción · {bimestre} ◆
+          </p>
+          <h1 className="font-serif text-4xl text-cream tracking-tight">
+            Láminas & Entregas
+          </h1>
+          <div className="mt-3 gold-divider w-32 mx-auto" />
+        </header>
+        {children}
+      </div>
+    </DashboardAnimatedWrapper>
+  );
+}
+
 export default async function LaminasPage() {
   const session = await auth();
   const email = session?.user?.email ?? "";
+
+  if (email === DEMO_EMAIL) {
+    return (
+      <PageShell bimestre={DEMO_BIMESTRE}>
+        <LaminasList laminas={DEMO_LAMINAS} activeBimestre={DEMO_BIMESTRE} />
+      </PageShell>
+    );
+  }
 
   const visibleIds = await getVisibleCourseIds();
 
@@ -25,10 +53,8 @@ export default async function LaminasPage() {
     getStudentGameStateByEmail(email),
   ]);
 
-  // Determine active bimestre from the most recently updated game state
   const activeBimestre = gameStates.length > 0 ? gameStates[0].bimestre : "B1";
 
-  // Build coursework name map: classroom_coursework_id → name
   const courseIds = [...new Set(deliveries.map((d) => d.course_id))];
   const configArrays = await Promise.all(courseIds.map((id) => getCourseworkConfig(id)));
   const nameMap = new Map<string, string>();
@@ -38,7 +64,6 @@ export default async function LaminasPage() {
     }
   }
 
-  // Build strike set: classroom_coursework_id values that generated a strike
   const strikeSet = new Set(
     strikes
       .filter((s) => s.classroom_coursework_id !== null)
@@ -59,21 +84,8 @@ export default async function LaminasPage() {
   }));
 
   return (
-    <DashboardAnimatedWrapper>
-      <div>
-        <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-gold/60">
-          ◆ Registro de Producción ◆
-        </p>
-        <h1 className="font-serif text-3xl text-cream">
-          Láminas & Entregas
-        </h1>
-        <div className="mt-3 gold-divider w-28 mb-3" />
-        <p className="text-sm text-sage max-w-lg">
-          Historial de todas tus entregas del ciclo lectivo. El estado de cada producción determina tu XP y tu nivel de strikes activos.
-        </p>
-      </div>
-
+    <PageShell bimestre={activeBimestre}>
       <LaminasList laminas={laminas} activeBimestre={activeBimestre} />
-    </DashboardAnimatedWrapper>
+    </PageShell>
   );
 }

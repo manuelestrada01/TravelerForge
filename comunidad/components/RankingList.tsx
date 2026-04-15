@@ -4,11 +4,14 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import {
-  Axe, Music, HeartHandshake, Shield, Leaf, BookOpen, type LucideIcon,
+  Axe, Music, HeartHandshake, Shield, Leaf, BookOpen, Users, type LucideIcon,
 } from "lucide-react";
 import type { RankingEntry } from "@/lib/supabase/comunidad";
 
 gsap.registerPlugin(useGSAP);
+
+const STONE_NOISE =
+  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.055'/%3E%3C/svg%3E\")";
 
 const CLASS_ICONS: Record<string, LucideIcon> = {
   barbaro: Axe,
@@ -28,10 +31,28 @@ const CLASS_LABELS: Record<string, string> = {
   erudito: "Erudito",
 };
 
-const MEDAL: Record<number, { label: string; bg: string; border: string; text: string; numColor: string }> = {
-  1: { label: "1°", bg: "bg-[#c9a227]/10", border: "border-[#c9a227]/40", text: "text-[#c9a227]", numColor: "text-[#c9a227]" },
-  2: { label: "2°", bg: "bg-[#b0b8c1]/10", border: "border-[#b0b8c1]/30", text: "text-[#b0b8c1]", numColor: "text-[#b0b8c1]" },
-  3: { label: "3°", bg: "bg-[#cd7f32]/10", border: "border-[#cd7f32]/30", text: "text-[#cd7f32]", numColor: "text-[#cd7f32]" },
+const MEDAL: Record<number, { label: string; color: string; leftAccent: string; stoneBg: string; stoneBorder: string }> = {
+  1: {
+    label: "1°",
+    color: "text-[#e8c96a]",
+    leftAccent: "rgba(232,201,106,0.85)",
+    stoneBg: `linear-gradient(170deg, #1a1508 0%, #120f05 100%)`,
+    stoneBorder: "1px solid rgba(232,201,106,0.28)",
+  },
+  2: {
+    label: "2°",
+    color: "text-[#c8cfd6]",
+    leftAccent: "rgba(180,190,200,0.7)",
+    stoneBg: `linear-gradient(170deg, #13151a 0%, #0e1014 100%)`,
+    stoneBorder: "1px solid rgba(180,190,200,0.2)",
+  },
+  3: {
+    label: "3°",
+    color: "text-[#c8884a]",
+    leftAccent: "rgba(180,120,60,0.65)",
+    stoneBg: `linear-gradient(170deg, #160f08 0%, #100b05 100%)`,
+    stoneBorder: "1px solid rgba(180,120,60,0.22)",
+  },
 };
 
 function initials(name: string) {
@@ -53,7 +74,7 @@ export default function RankingList({ entries, currentEmail }: Props) {
       gsap.fromTo(
         "[data-row]",
         { opacity: 0, x: -16 },
-        { opacity: 1, x: 0, stagger: 0.055, duration: 0.4, ease: "power3.out", delay: 0.1 }
+        { opacity: 1, x: 0, stagger: 0.05, duration: 0.4, ease: "power3.out", delay: 0.1 }
       );
     },
     { scope: containerRef }
@@ -61,29 +82,43 @@ export default function RankingList({ entries, currentEmail }: Props) {
 
   if (!entries.length) {
     return (
-      <p className="text-sm text-[#9aab8a]/60 text-center py-16">
+      <p className="font-serif text-[17px] italic text-[rgba(160,125,55,0.4)] text-center py-16">
         Sin datos de ranking disponibles.
       </p>
     );
   }
 
   return (
-    <div ref={containerRef} className="flex flex-col gap-2">
-      {/* Tu posición — banner */}
+    <div ref={containerRef} className="flex flex-col gap-3">
+
+      {/* Tu posición */}
       {currentEntry && (
-        <div className="rounded-xl border border-[#c9a227]/20 bg-[#c9a227]/5 px-5 py-3 flex items-center justify-between mb-2">
-          <p className="text-[10px] uppercase tracking-widest text-[#9aab8a]/60">Tu posición</p>
+        <div
+          data-row
+          className="relative flex items-center justify-between px-6 py-3 overflow-hidden"
+          style={{
+            background: `${STONE_NOISE}, linear-gradient(170deg, #17130a 0%, #120f06 100%)`,
+            border: "1px solid rgba(200,168,75,0.35)",
+            borderLeft: "2px solid rgba(200,168,75,0.6)",
+            boxShadow: "0 0 20px rgba(200,168,75,0.06)",
+          }}
+        >
+          <div className="pointer-events-none absolute inset-[4px] border border-[rgba(160,125,55,0.08)]" />
+          <div className="flex items-center gap-2">
+            <Users size={13} strokeWidth={1.5} className="text-[rgba(160,125,55,0.45)]" />
+            <p className="text-[13px] font-serif uppercase tracking-[0.25em] text-[rgba(160,125,55,0.45)]">Tu posición</p>
+          </div>
           <div className="flex items-center gap-3">
-            <span className="font-serif text-2xl font-bold text-[#c9a227]">#{currentEntry.position}</span>
-            <span className="text-[10px] text-[#9aab8a]">de {entries.length} estudiantes</span>
+            <span className="font-serif text-[22px] font-bold text-[#c8a84b] tabular-nums">#{currentEntry.position}</span>
+            <span className="text-[13px] font-serif text-[rgba(160,125,55,0.4)]">de {entries.length} estudiantes</span>
           </div>
         </div>
       )}
 
-      {/* Header */}
-      <div className="grid grid-cols-[40px_1fr_140px_80px_120px] gap-4 px-5 py-2">
+      {/* Header columns */}
+      <div className="grid grid-cols-[44px_1fr_140px_80px_120px] gap-4 px-5 py-2">
         {["#", "Estudiante", "Clase", "Nivel", "XP"].map((h) => (
-          <p key={h} className="text-[9px] uppercase tracking-widest text-[#9aab8a]/40 font-semibold">
+          <p key={h} className="text-[12px] font-serif uppercase tracking-[0.25em] text-[rgba(160,125,55,0.45)]">
             {h}
           </p>
         ))}
@@ -97,66 +132,98 @@ export default function RankingList({ entries, currentEmail }: Props) {
         const classLabel = CLASS_LABELS[entry.formativeClass] ?? entry.formativeClass;
         const barWidth = Math.round((entry.xpTotal / maxXp) * 100);
 
+        const leftAccent = isMe
+          ? "rgba(200,168,75,0.6)"
+          : medal
+          ? medal.leftAccent
+          : "rgba(160,125,55,0.18)";
+
+        const rowBg = isMe
+          ? `${STONE_NOISE}, linear-gradient(170deg, #17130a 0%, #120f06 100%)`
+          : medal
+          ? `${STONE_NOISE}, ${medal.stoneBg}`
+          : `${STONE_NOISE}, linear-gradient(170deg, #0d0c08 0%, #090806 100%)`;
+
+        const rowBorder = isMe
+          ? "1px solid rgba(200,168,75,0.32)"
+          : medal
+          ? medal.stoneBorder
+          : "1px solid rgba(160,125,55,0.2)";
+
         return (
           <div
             key={entry.email}
             data-row
-            className={`grid grid-cols-[40px_1fr_140px_80px_120px] gap-4 items-center rounded-xl border px-5 py-3.5 transition-colors ${
-              isMe
-                ? "border-[#c9a227]/30 bg-[#c9a227]/8 shadow-[0_0_20px_rgba(201,162,39,0.06)]"
-                : medal
-                ? `${medal.bg} ${medal.border}`
-                : "border-[#1e3320] bg-[#0F2411]"
-            }`}
+            className="relative grid grid-cols-[44px_1fr_140px_80px_120px] gap-4 items-center px-5 py-3.5 hover:brightness-110 transition-all"
+            style={{
+              background: rowBg,
+              border: rowBorder,
+              borderLeft: `2px solid ${leftAccent}`,
+              boxShadow: isMe ? "0 0 20px rgba(200,168,75,0.05)" : "0 2px 12px rgba(0,0,0,0.4)",
+              opacity: 0,
+            }}
           >
+            <div className="pointer-events-none absolute inset-[4px] border border-[rgba(160,125,55,0.06)]" />
+
             {/* Position */}
-            <div className="flex items-center justify-center">
+            <div className="relative flex items-center justify-center">
               {medal ? (
-                <span className={`font-serif text-lg font-bold ${medal.numColor}`}>
-                  {medal.label}
-                </span>
+                <span className={`font-serif text-[20px] font-bold ${medal.color}`}>{medal.label}</span>
               ) : (
-                <span className="text-sm font-semibold text-[#9aab8a]/50 tabular-nums">
-                  {entry.position}
-                </span>
+                <span className="font-serif text-[15px] text-[rgba(160,125,55,0.4)] tabular-nums">{entry.position}</span>
               )}
             </div>
 
             {/* Student */}
-            <div className="flex items-center gap-3 min-w-0">
-              <div className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg text-xs font-bold ${
-                isMe ? "bg-[#c9a227]/20 text-[#c9a227]" : "bg-[#1e3320] text-[#9aab8a]"
-              }`}>
+            <div className="relative flex items-center gap-3 min-w-0">
+              <div
+                className="flex h-9 w-9 flex-shrink-0 items-center justify-center text-[12px] font-serif font-bold"
+                style={{
+                  background: isMe ? "rgba(200,168,75,0.12)" : "rgba(160,125,55,0.07)",
+                  border: isMe ? "1px solid rgba(200,168,75,0.35)" : "1px solid rgba(160,125,55,0.2)",
+                  color: isMe ? "#c8a84b" : "rgba(160,125,55,0.6)",
+                }}
+              >
                 {initials(entry.displayName)}
               </div>
               <div className="min-w-0">
-                <p className={`text-sm font-semibold leading-tight truncate ${isMe ? "text-[#c9a227]" : "text-[#f5f0e8]"}`}>
+                <p className={`font-serif text-[17px] leading-tight truncate ${
+                  isMe ? "text-[#c8a84b]" : medal ? medal.color : "text-[rgba(232,224,208,0.8)]"
+                }`}>
                   {entry.displayName}
-                  {isMe && <span className="ml-2 text-[9px] uppercase tracking-wider text-[#c9a227]/60">· tú</span>}
+                  {isMe && (
+                    <span className="ml-2 text-[10px] font-serif uppercase tracking-wider text-[rgba(160,125,55,0.5)]">· tú</span>
+                  )}
                 </p>
               </div>
             </div>
 
             {/* Class */}
-            <div className="flex items-center gap-2">
-              <Icon size={13} strokeWidth={1.5} className={medal ? medal.text : "text-[#9aab8a]/60"} />
-              <span className={`text-xs ${medal ? medal.text : "text-[#9aab8a]"}`}>{classLabel}</span>
+            <div className="relative flex items-center gap-2">
+              <Icon size={13} strokeWidth={1.4} className={medal ? medal.color : "text-[rgba(160,125,55,0.45)]"} />
+              <span className={`font-serif text-[14px] ${medal ? medal.color : "text-[rgba(160,125,55,0.55)]"}`}>
+                {classLabel}
+              </span>
             </div>
 
             {/* Level */}
-            <span className={`text-sm font-bold tabular-nums ${medal ? medal.text : isMe ? "text-[#c9a227]" : "text-[#9aab8a]"}`}>
+            <span className={`relative font-serif text-[15px] font-bold tabular-nums ${
+              medal ? medal.color : isMe ? "text-[#c8a84b]" : "text-[rgba(160,125,55,0.55)]"
+            }`}>
               Nv. {entry.level}
             </span>
 
             {/* XP + bar */}
-            <div className="flex flex-col gap-1">
-              <span className={`text-xs font-bold tabular-nums text-right ${medal ? medal.text : isMe ? "text-[#c9a227]" : "text-[#8fbc8f]"}`}>
+            <div className="relative flex flex-col gap-1.5">
+              <span className={`font-serif text-[15px] font-bold tabular-nums text-right ${
+                medal ? medal.color : isMe ? "text-[#c8a84b]" : "text-[rgba(160,125,55,0.7)]"
+              }`}>
                 {entry.xpTotal.toLocaleString("es-AR")} XP
               </span>
-              <div className="h-1 w-full rounded-full bg-[#0d1a0f] overflow-hidden">
+              <div className="h-1 w-full bg-[rgba(160,125,55,0.08)] overflow-hidden">
                 <div
-                  className={`h-full rounded-full ${isMe || entry.position === 1 ? "bg-gradient-to-r from-[#4a8f5a] to-[#c9a227]" : "bg-[#1e3320]"}`}
-                  style={{ width: `${barWidth}%` }}
+                  className="h-full xp-bar-fill"
+                  style={{ width: `${barWidth}%`, opacity: isMe || entry.position <= 3 ? 1 : 0.45 }}
                 />
               </div>
             </div>

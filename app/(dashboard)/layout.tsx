@@ -10,6 +10,7 @@ import { getCoursesByTeacher, getCoursesByIds, getVisibleCourseIds } from "@/lib
 import { getStudentGameStateByEmail } from "@/lib/supabase/game";
 import { detectRole } from "@/lib/google/classroom";
 import { getFormativeClasses } from "@/lib/supabase/classes";
+import { DEMO_EMAIL, DEMO_NAME, DEMO_CLASS, DEMO_LEVEL } from "@/lib/demo/data";
 
 export default async function DashboardLayout({
   children,
@@ -26,6 +27,33 @@ export default async function DashboardLayout({
 
   const email = session.user.email ?? "";
   const defaultName = session.user.name?.split(" ")[0] ?? "Estudiante";
+
+  // Demo user — render layout directly with mock data, no Supabase/Classroom calls
+  if (email === DEMO_EMAIL) {
+    return (
+      <div className="flex h-screen flex-col overflow-hidden" style={{ background: "transparent" }}>
+        <Suspense fallback={<div className="h-14 border-b border-hud-border bg-hud-base" />}>
+          <Header
+            courses={[{ id: "demo-course", name: "1 | Tecnología de la Representación" }]}
+            studentName={DEMO_NAME.split(" ")[0]}
+            studentImage={null}
+          />
+        </Suspense>
+        <div className="flex flex-1 overflow-hidden">
+          <Sidebar
+            studentName={DEMO_NAME.split(" ")[0]}
+            studentImage={null}
+            level={DEMO_LEVEL}
+            formativeClassTitle={DEMO_CLASS.title}
+          />
+          <main className="flex-1 overflow-y-auto flex flex-col">
+            <div className="flex-1">{children}</div>
+            <Footer />
+          </main>
+        </div>
+      </div>
+    );
+  }
 
   // 1. Check Supabase courses table AND Classroom API concurrently
   const authSession = await getAuthSession();
@@ -72,7 +100,7 @@ export default async function DashboardLayout({
     const formativeClassTitle = classEntry?.title ?? profile.formative_class;
 
     return (
-      <div className="flex h-screen flex-col overflow-hidden bg-hud-base">
+      <div className="flex h-screen flex-col overflow-hidden" style={{ background: "transparent" }}>
         <Suspense fallback={<div className="h-14 border-b border-hud-border bg-hud-base" />}>
           <Header
             courses={courses.map((c) => ({ id: c.id, name: c.name }))}

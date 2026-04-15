@@ -5,10 +5,38 @@ import { getXpConfig } from "@/lib/supabase/config";
 import MisionesGrid from "@/misiones/components/MisionesGrid";
 import DashboardAnimatedWrapper from "@/dashboard/components/DashboardAnimatedWrapper";
 import type { Mision, MisionStatus } from "@/misiones/types";
+import {
+  DEMO_EMAIL, DEMO_LEVEL, DEMO_XP,
+  DEMO_BIMESTRE, DEMO_MISIONES_PENDIENTES, DEMO_MISIONES_COMPLETADAS, DEMO_MISIONES_XP_TOTAL,
+} from "@/lib/demo/data";
 
 export default async function MisionesPage() {
   const session = await auth();
   const email = session?.user?.email ?? "";
+
+  if (email === DEMO_EMAIL) {
+    const total = DEMO_MISIONES_PENDIENTES.length + DEMO_MISIONES_COMPLETADAS.length;
+    return (
+      <DashboardAnimatedWrapper>
+        <div className="max-w-4xl mx-auto flex flex-col gap-8">
+          <header className="pb-6 text-center">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-gold/60 mb-1">
+              ◆ Bimestre {DEMO_BIMESTRE} ◆
+            </p>
+            <h1 className="font-serif text-4xl text-cream tracking-tight">Tablón de Misiones</h1>
+            <div className="mt-3 gold-divider w-32 mx-auto" />
+          </header>
+          <MisionesGrid
+            pendientes={DEMO_MISIONES_PENDIENTES}
+            completadas={DEMO_MISIONES_COMPLETADAS}
+            xpTotal={DEMO_XP}
+            nivel={DEMO_LEVEL}
+            total={total}
+          />
+        </div>
+      </DashboardAnimatedWrapper>
+    );
+  }
 
   const visibleIds = await getVisibleCourseIds();
 

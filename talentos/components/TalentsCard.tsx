@@ -100,7 +100,7 @@ function TalentPopup({ talent, onClose }: { talent: Talent; onClose: () => void 
 
           <h3 className="relative mb-1 font-serif text-xl font-bold text-cream">{talent.name}</h3>
           <div className="relative my-4 gold-divider w-16" />
-          <p className="relative mb-6 text-sm leading-relaxed text-sage">{talent.description}</p>
+          <p className="relative mb-6 text-sm leading-relaxed text-sage font-serif">{talent.description}</p>
 
           <div className="relative flex gap-2">
             {talent.attributes.map((attr) => (

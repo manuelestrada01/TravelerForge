@@ -8,9 +8,8 @@ import { Check, AlertCircle, Clock, Trophy, Zap, ChevronDown, ChevronUp } from "
 
 gsap.registerPlugin(useGSAP);
 
-const VISIBLE_COUNT = 3;
+const VISIBLE_COUNT = 4;
 
-// Stone texture — matches dashboard palette
 const STONE_NOISE =
   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.055'/%3E%3C/svg%3E\")";
 
@@ -44,35 +43,34 @@ function MisionCard({ m, dataAttr }: { m: Mision; dataAttr?: string }) {
         boxShadow: "0 4px 20px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02)",
       }}
     >
-      {/* Inner frame */}
       <div className="pointer-events-none absolute inset-[5px] border border-[rgba(160,125,55,0.07)]" />
 
       {/* Top row */}
       <div className="relative flex items-center gap-2 flex-wrap">
-        <span className="text-[9px] font-serif uppercase tracking-[0.2em] text-[rgba(160,125,55,0.6)] border border-[rgba(160,125,55,0.22)] bg-[rgba(160,125,55,0.06)] px-2 py-0.5">
+        <span className="text-[11px] font-serif uppercase tracking-[0.2em] text-[rgba(160,125,55,0.6)] border border-[rgba(160,125,55,0.22)] bg-[rgba(160,125,55,0.06)] px-2 py-0.5">
           {m.tipo}
         </span>
         {(dl.urgent || dl.overdue) && (
-          <span className={`flex items-center gap-1 text-[9px] font-serif uppercase tracking-wider px-1.5 py-0.5 ${
+          <span className={`flex items-center gap-1 text-[11px] font-serif uppercase tracking-wider px-1.5 py-0.5 ${
             dl.overdue
               ? "text-danger border border-danger/35 bg-danger/[0.07]"
               : "text-[rgba(212,140,23,0.85)] border border-[rgba(212,140,23,0.3)] bg-[rgba(212,140,23,0.07)]"
           }`}>
-            <AlertCircle size={8} strokeWidth={2.5} />
+            <AlertCircle size={10} strokeWidth={2.5} />
             {dl.overdue ? "Atrasada" : "Urgente"}
           </span>
         )}
-        <span className="ml-auto font-serif text-sm font-bold text-[#c8a84b]">
+        <span className="ml-auto font-serif text-[17px] font-bold text-[#c8a84b]">
           +{m.xpReward.toLocaleString("es-AR")} XP
         </span>
       </div>
 
-      <h4 className="relative font-serif text-base text-[rgba(232,224,208,0.88)] leading-snug flex-1">{m.title}</h4>
+      <h4 className="relative font-serif text-[20px] text-[rgba(232,224,208,0.88)] leading-snug flex-1">{m.title}</h4>
 
-      <p className={`relative flex items-center gap-1.5 text-[10px] font-serif uppercase tracking-wider ${
+      <p className={`relative flex items-center gap-1.5 text-[13px] font-serif uppercase tracking-wider ${
         dl.overdue ? "text-danger/60" : "text-[rgba(160,125,55,0.45)]"
       }`}>
-        <Clock size={9} strokeWidth={1.5} />
+        <Clock size={11} strokeWidth={1.5} />
         {dl.text}
       </p>
     </div>
@@ -131,14 +129,13 @@ export default function MisionesGrid({ pendientes, completadas, xpTotal, nivel, 
         }}
       >
         <div className="pointer-events-none absolute inset-[5px] border border-[rgba(160,125,55,0.07)]" />
-        {/* Candlelight */}
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(200,148,40,0.06)_0%,transparent_55%)]" />
 
         {/* Progress bar */}
         <div className="flex-1 relative">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-[9px] font-serif uppercase tracking-[0.25em] text-[rgba(160,125,55,0.5)]">Progreso del bimestre</p>
-            <p className="text-[9px] font-serif uppercase tracking-wider text-[rgba(200,168,75,0.6)]">{progressPct}%</p>
+            <p className="text-[11px] font-serif uppercase tracking-[0.25em] text-[rgba(160,125,55,0.5)]">Progreso del bimestre</p>
+            <p className="text-[11px] font-serif uppercase tracking-wider text-[rgba(200,168,75,0.6)]">{progressPct}%</p>
           </div>
           <div className="flex gap-0.5 h-2">
             {Array.from({ length: 10 }).map((_, i) => (
@@ -159,8 +156,8 @@ export default function MisionesGrid({ pendientes, completadas, xpTotal, nivel, 
           { label: "Nivel", value: String(nivel), color: "text-[rgba(200,168,75,0.7)]" },
         ].map(({ label, value, color }) => (
           <div key={label} data-stat className="text-center relative" style={{ opacity: 0 }}>
-            <p className="text-[8px] font-serif uppercase tracking-[0.25em] text-[rgba(160,125,55,0.45)] mb-0.5">{label}</p>
-            <p className={`font-serif text-lg font-bold tabular-nums ${color}`}>{value}</p>
+            <p className="text-[10px] font-serif uppercase tracking-[0.25em] text-[rgba(160,125,55,0.45)] mb-0.5">{label}</p>
+            <p className={`font-serif text-[22px] font-bold tabular-nums ${color}`}>{value}</p>
           </div>
         ))}
       </div>
@@ -168,10 +165,10 @@ export default function MisionesGrid({ pendientes, completadas, xpTotal, nivel, 
       {/* ── Misiones Activas ── */}
       <section>
         <div className="flex items-center gap-3 mb-4">
-          <Trophy size={13} className="text-[#c8a84b]" />
-          <h3 className="font-serif text-xl text-[rgba(232,224,208,0.88)]">Misiones Activas</h3>
+          <Trophy size={15} className="text-[#c8a84b]" />
+          <h3 className="font-serif text-[25px] text-[rgba(232,224,208,0.88)]">Misiones Activas</h3>
           {pendientes.length > 0 && (
-            <span className="ml-auto text-[9px] font-serif uppercase tracking-[0.2em] text-[rgba(200,168,75,0.7)] border border-[rgba(160,125,55,0.3)] bg-[rgba(160,125,55,0.07)] px-2.5 py-0.5">
+            <span className="ml-auto text-[11px] font-serif uppercase tracking-[0.2em] text-[rgba(200,168,75,0.7)] border border-[rgba(160,125,55,0.3)] bg-[rgba(160,125,55,0.07)] px-2.5 py-0.5">
               {pendientes.length} pendiente{pendientes.length !== 1 ? "s" : ""}
             </span>
           )}
@@ -179,37 +176,32 @@ export default function MisionesGrid({ pendientes, completadas, xpTotal, nivel, 
 
         {pendientes.length === 0 ? (
           <div
-            className="relative flex items-center gap-3 p-6 font-serif text-sm italic text-[rgba(160,125,55,0.5)]"
+            className="relative flex items-center gap-3 p-6 font-serif text-[17px] italic text-[rgba(160,125,55,0.5)]"
             style={{
               background: `${STONE_NOISE}, linear-gradient(170deg, #141209 0%, #0e0d07 100%)`,
               border: "1px solid rgba(160,125,55,0.25)",
             }}
           >
-            <Check size={13} className="text-[#c8a84b] shrink-0" />
+            <Check size={15} className="text-[#c8a84b] shrink-0" />
             Todo al día — no hay misiones pendientes en este bimestre.
           </div>
         ) : (
           <div className="flex flex-col gap-3">
             <div className="grid grid-cols-2 gap-3">
               {visible.map((m) => <MisionCard key={m.id} m={m} dataAttr="visible" />)}
+              {expanded && hidden.map((m) => <MisionCard key={m.id} m={m} dataAttr="hidden" />)}
             </div>
-
-            {expanded && (
-              <div className="grid grid-cols-2 gap-3">
-                {hidden.map((m) => <MisionCard key={m.id} m={m} dataAttr="hidden" />)}
-              </div>
-            )}
 
             {hasMore && (
               <button
                 onClick={handleToggle}
-                className="flex items-center justify-center gap-2 w-full py-2.5 text-[9px] font-serif uppercase tracking-[0.25em] text-[rgba(160,125,55,0.5)] hover:text-[rgba(200,168,75,0.8)] transition-colors"
+                className="flex items-center justify-center gap-2 w-full py-2.5 text-[11px] font-serif uppercase tracking-[0.25em] text-[rgba(160,125,55,0.5)] hover:text-[rgba(200,168,75,0.8)] transition-colors"
                 style={{ border: "1px solid rgba(160,125,55,0.2)", background: "rgba(160,125,55,0.04)" }}
               >
                 {expanded ? (
-                  <><ChevronUp size={11} strokeWidth={2} /> Ver menos</>
+                  <><ChevronUp size={13} strokeWidth={2} /> Ver menos</>
                 ) : (
-                  <><ChevronDown size={11} strokeWidth={2} /> Ver {hidden.length} misión{hidden.length !== 1 ? "es" : ""} más</>
+                  <><ChevronDown size={13} strokeWidth={2} /> Ver {hidden.length} misión{hidden.length !== 1 ? "es" : ""} más</>
                 )}
               </button>
             )}
@@ -221,9 +213,9 @@ export default function MisionesGrid({ pendientes, completadas, xpTotal, nivel, 
       {completadas.length > 0 && (
         <section>
           <div className="flex items-center gap-3 mb-3">
-            <Check size={12} className="text-[#c8a84b]" />
-            <h3 className="font-serif text-lg text-[rgba(200,168,75,0.55)]">Completadas este bimestre</h3>
-            <span className="ml-auto text-[9px] font-serif text-[rgba(160,125,55,0.4)] tabular-nums">
+            <Check size={14} className="text-[#c8a84b]" />
+            <h3 className="font-serif text-[22px] text-[rgba(200,168,75,0.55)]">Completadas este bimestre</h3>
+            <span className="ml-auto text-[11px] font-serif text-[rgba(160,125,55,0.4)] tabular-nums">
               {completadas.length} misión{completadas.length !== 1 ? "es" : ""}
             </span>
           </div>
@@ -244,23 +236,23 @@ export default function MisionesGrid({ pendientes, completadas, xpTotal, nivel, 
                 <div
                   key={m.id}
                   data-card-completada
-                  className={`flex items-center gap-3 px-5 py-3 group ${
+                  className={`flex items-center gap-3 px-5 py-3.5 group ${
                     i !== completadas.length - 1 ? "border-b border-[rgba(160,125,55,0.12)]" : ""
                   }`}
                 >
-                  <span className="text-[#c8a84b]/40 text-[9px] font-serif">✓</span>
-                  <span className="text-[9px] font-serif uppercase tracking-wider text-[rgba(160,125,55,0.35)] shrink-0 w-8">{m.tipo}</span>
-                  <span className="font-serif text-sm text-[rgba(232,224,208,0.5)] truncate min-w-0">{m.title}</span>
+                  <span className="text-[#c8a84b]/40 text-[11px] font-serif">✓</span>
+                  <span className="text-[11px] font-serif uppercase tracking-wider text-[rgba(160,125,55,0.35)] shrink-0 w-9">{m.tipo}</span>
+                  <span className="font-serif text-[17px] text-[rgba(232,224,208,0.5)] truncate min-w-0">{m.title}</span>
                   <span className="flex-1 border-b border-dotted border-[rgba(160,125,55,0.12)] group-hover:border-[rgba(160,125,55,0.25)] transition-colors mx-2 mb-0.5 min-w-4" />
-                  <span className="text-[10px] font-serif text-[rgba(160,125,55,0.35)] tabular-nums shrink-0">{fechaEntrega ?? "—"}</span>
+                  <span className="text-[13px] font-serif text-[rgba(160,125,55,0.35)] tabular-nums shrink-0">{fechaEntrega ?? "—"}</span>
                   <div className="flex items-center gap-1 shrink-0 ml-2">
                     {(m.xpBonus ?? 0) > 0 && (
-                      <span className="flex items-center gap-0.5 text-[9px] text-[rgba(160,125,55,0.6)] border border-[rgba(160,125,55,0.2)] bg-[rgba(160,125,55,0.06)] px-1 py-0.5">
-                        <Zap size={7} />
+                      <span className="flex items-center gap-0.5 text-[11px] text-[rgba(160,125,55,0.6)] border border-[rgba(160,125,55,0.2)] bg-[rgba(160,125,55,0.06)] px-1 py-0.5">
+                        <Zap size={9} />
                         +{m.xpBonus}
                       </span>
                     )}
-                    <span className="font-serif text-sm font-bold text-[#c8a84b] tabular-nums">
+                    <span className="font-serif text-[17px] font-bold text-[#c8a84b] tabular-nums">
                       +{m.xpReward.toLocaleString("es-AR")} XP
                     </span>
                   </div>
@@ -272,7 +264,7 @@ export default function MisionesGrid({ pendientes, completadas, xpTotal, nivel, 
       )}
 
       {pendientes.length === 0 && completadas.length === 0 && (
-        <p className="font-serif text-sm italic text-[rgba(160,125,55,0.4)] text-center py-16">
+        <p className="font-serif text-[17px] italic text-[rgba(160,125,55,0.4)] text-center py-16">
           Sin misiones registradas para este bimestre.
         </p>
       )}
