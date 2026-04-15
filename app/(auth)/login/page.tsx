@@ -44,10 +44,10 @@ export default function LoginPage() {
               <span className="font-serif text-2xl font-bold text-[#c8a84b]" style={{ textShadow: "0 0 20px rgba(200,168,75,0.5)" }}>T</span>
             </div>
 
-            <p className="font-serif text-3xl font-bold text-[rgba(232,224,208,0.92)] tracking-[0.04em]" style={{ textShadow: "0 0 30px rgba(200,168,75,0.2)" }}>
+            <p className="font-serif text-3xl font-bold text-[rgba(232,224,208,0.96)] tracking-[0.04em]" style={{ textShadow: "0 0 30px rgba(200,168,75,0.35)" }}>
               TRAVELERFORGE
             </p>
-            <p className="text-[13px] font-serif uppercase tracking-[0.3em] text-[rgba(160,125,55,0.5)]">
+            <p className="text-[13px] font-serif uppercase tracking-[0.3em] text-[rgba(200,168,75,0.7)]">
               Visor Académico
             </p>
 
@@ -61,8 +61,8 @@ export default function LoginPage() {
           {/* Body */}
           <div className="relative flex flex-col gap-5" style={{ zIndex: 2 }}>
             <div className="text-center flex flex-col gap-1">
-              <h2 className="font-serif text-lg text-[rgba(232,224,208,0.85)]">Ingresar al Visor</h2>
-              <p className="text-[14px] font-serif text-[rgba(160,125,55,0.5)] leading-relaxed">
+              <h2 className="font-serif text-lg text-[rgba(232,224,208,0.95)]">Ingresar al Visor</h2>
+              <p className="text-[14px] font-serif text-[rgba(200,168,75,0.65)] leading-relaxed">
                 Usá tu cuenta institucional Google para acceder a tu progreso académico.
               </p>
             </div>
@@ -91,8 +91,8 @@ export default function LoginPage() {
               </button>
             </form>
 
-            <p className="text-center text-[14px] font-serif text-[rgba(160,125,55,0.35)] leading-relaxed">
-              Solo cuentas <span className="text-[rgba(160,125,55,0.6)]">@fecea.edu.ar</span> tienen acceso al visor.
+            <p className="text-center text-[14px] font-serif text-[rgba(160,125,55,0.55)] leading-relaxed">
+              Solo cuentas <span className="text-[rgba(200,168,75,0.8)]">@fecea.edu.ar</span> tienen acceso al visor.
             </p>
 
             <div className="flex items-center gap-3">

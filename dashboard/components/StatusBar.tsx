@@ -32,9 +32,6 @@ const SEAL_D = (() => {
   return pts.join(" ") + "Z";
 })();
 
-const STONE_NOISE =
-  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E\")";
-
 const REASON_LABELS: Record<string, { label: string; color: string }> = {
   no_submission:    { label: "No entrega",               color: "text-danger" },
   late_submission:  { label: "Entrega fuera de término", color: "text-ember" },
@@ -225,18 +222,15 @@ export default function StatusBar({
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
-        className="relative overflow-hidden flex flex-col md:flex-row"
-        style={{
-          background: `${STONE_NOISE}, linear-gradient(180deg, #18140c 0%, #120f09 100%)`,
-          borderTop: blocked
-            ? "1px solid rgba(180,60,60,0.45)"
-            : "1px solid rgba(160,125,55,0.32)",
-          borderBottom: "1px solid rgba(80,65,30,0.25)",
-          boxShadow: "0 4px 24px rgba(0,0,0,0.6), inset 0 1px 0 rgba(200,168,75,0.04)",
-        }}
+        className={`chronicle-stone relative overflow-hidden flex flex-col md:flex-row ${blocked ? "!border-[rgba(180,60,60,0.45)]" : ""}`}
       >
-        {/* Warm top-glow */}
-        <div className="pointer-events-none absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[rgba(200,168,75,0.18)] to-transparent" />
+        {/* Corner ornaments */}
+        <span className="pointer-events-none absolute top-[3px] left-[3px] text-[6px] text-[rgba(160,125,55,0.22)] leading-none select-none z-10">◆</span>
+        <span className="pointer-events-none absolute top-[3px] right-[3px] text-[6px] text-[rgba(160,125,55,0.22)] leading-none select-none z-10">◆</span>
+        <span className="pointer-events-none absolute bottom-[3px] left-[3px] text-[6px] text-[rgba(160,125,55,0.22)] leading-none select-none z-10">◆</span>
+        <span className="pointer-events-none absolute bottom-[3px] right-[3px] text-[6px] text-[rgba(160,125,55,0.22)] leading-none select-none z-10">◆</span>
+        {/* Candlelight glow */}
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(212,160,23,0.05)_0%,transparent_55%)]" />
 
         {/* ── Level seal + XP ── */}
         <div className="flex flex-1 items-center gap-5 px-6 py-4">

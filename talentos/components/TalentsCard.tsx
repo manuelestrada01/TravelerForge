@@ -170,7 +170,7 @@ export default function TalentsCard({ talents }: TalentsCardProps) {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45, delay: 0.12, ease: "easeOut" }}
-        className="reliquary-panel h-full p-5 flex flex-col relative"
+        className="chronicle-stone h-full p-5 flex flex-col relative"
       >
         {/* Corner diamond ornaments */}
         <span className="pointer-events-none absolute top-[3px] left-[3px] text-[6px] text-gold/22 leading-none select-none" style={{ zIndex: 1 }}>◆</span>
@@ -178,14 +178,14 @@ export default function TalentsCard({ talents }: TalentsCardProps) {
         <span className="pointer-events-none absolute bottom-[3px] left-[3px] text-[6px] text-gold/22 leading-none select-none" style={{ zIndex: 1 }}>◆</span>
         <span className="pointer-events-none absolute bottom-[3px] right-[3px] text-[6px] text-gold/22 leading-none select-none" style={{ zIndex: 1 }}>◆</span>
 
-        {/* Warm candlelight over oak */}
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(200,140,60,0.07)_0%,transparent_55%)]" />
+        {/* Candlelight from above */}
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(212,160,23,0.05)_0%,transparent_55%)]" />
 
         {/* Header — carved wood plaque inscription */}
         <div className="relative flex flex-col items-center mb-3 gap-1" style={{ zIndex: 2 }}>
-          <div className="flex items-center w-full gap-2">
+          <div className="flex items-center w-full gap-3">
             <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[rgba(160,125,55,0.4)] to-transparent" />
-            <span className="text-[rgba(200,168,75,0.5)] text-[9px] font-serif leading-none">✠</span>
+            <span className="text-gold/40 text-[8px] font-serif leading-none tracking-widest">✦ ✦ ✦</span>
             <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[rgba(160,125,55,0.4)] to-transparent" />
           </div>
           <div className="flex items-center gap-2">

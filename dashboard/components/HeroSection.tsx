@@ -56,7 +56,11 @@ export default function HeroSection({ studentName, classEntry, level, levelName,
   return (
     <div
       className="relative w-full overflow-hidden"
-      style={{ minHeight: "260px" }}
+      style={{
+        minHeight: "260px",
+        border: "1px solid rgba(160,125,55,0.38)",
+        boxShadow: "0 4px 32px rgba(0,0,0,0.7), inset 0 1px 0 rgba(200,168,75,0.04)",
+      }}
     >
       {/* ── Background photo ── */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -111,9 +115,21 @@ export default function HeroSection({ studentName, classEntry, level, levelName,
         }}
       />
 
-      {/* Aged bronze borders — top and bottom */}
-      <div className="pointer-events-none absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-[rgba(160,125,55,0.6)] via-[rgba(200,168,75,0.4)] to-[rgba(160,125,55,0.15)]" />
-      <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-[rgba(160,125,55,0.4)] via-[rgba(160,125,55,0.25)] to-transparent" />
+      {/* Top / bottom glow lines */}
+      <div className="pointer-events-none absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[rgba(200,168,75,0.55)] to-transparent" />
+      <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[rgba(160,125,55,0.35)] to-transparent" />
+
+      {/* Corner bracket ornaments — wrought iron */}
+      <div className="pointer-events-none absolute top-0 left-0 h-10 w-10 border-t-2 border-l-2 border-[rgba(200,168,75,0.5)]" />
+      <div className="pointer-events-none absolute top-0 right-0 h-10 w-10 border-t-2 border-r-2 border-[rgba(200,168,75,0.5)]" />
+      <div className="pointer-events-none absolute bottom-0 left-0 h-10 w-10 border-b-2 border-l-2 border-[rgba(200,168,75,0.5)]" />
+      <div className="pointer-events-none absolute bottom-0 right-0 h-10 w-10 border-b-2 border-r-2 border-[rgba(200,168,75,0.5)]" />
+
+      {/* Corner ◆ marks */}
+      <span className="pointer-events-none absolute top-[3px] left-[3px] text-[5px] text-[rgba(200,168,75,0.45)] leading-none select-none z-10">◆</span>
+      <span className="pointer-events-none absolute top-[3px] right-[3px] text-[5px] text-[rgba(200,168,75,0.45)] leading-none select-none z-10">◆</span>
+      <span className="pointer-events-none absolute bottom-[3px] left-[3px] text-[5px] text-[rgba(200,168,75,0.45)] leading-none select-none z-10">◆</span>
+      <span className="pointer-events-none absolute bottom-[3px] right-[3px] text-[5px] text-[rgba(200,168,75,0.45)] leading-none select-none z-10">◆</span>
 
       {/* Vertical divider before crest — desktop only */}
       <div className="pointer-events-none hidden md:block absolute right-[216px] top-6 bottom-6 w-px bg-gradient-to-b from-transparent via-[rgba(160,125,55,0.28)] to-transparent" />
