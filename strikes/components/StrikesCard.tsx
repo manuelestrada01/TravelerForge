@@ -46,14 +46,14 @@ function StrikesPopup({
     () => {
       gsap.timeline()
         .fromTo(overlayRef.current, { opacity: 0 }, { opacity: 1, duration: 0.2, ease: "power2.out" })
-        .fromTo(cardRef.current, { opacity: 0, scale: 0.88, y: 24 }, { opacity: 1, scale: 1, y: 0, duration: 0.28, ease: "power3.out" }, "-=0.1");
+        .fromTo(cardRef.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.28, ease: "power3.out" }, "-=0.1");
     },
     { scope: overlayRef }
   );
 
   function handleClose() {
     gsap.timeline({ onComplete: onClose })
-      .to(cardRef.current, { opacity: 0, scale: 0.88, y: 16, duration: 0.2, ease: "power2.in" })
+      .to(cardRef.current, { opacity: 0, y: 12, duration: 0.18, ease: "power2.in" })
       .to(overlayRef.current, { opacity: 0, duration: 0.15, ease: "power2.in" }, "-=0.1");
   }
 
@@ -66,12 +66,13 @@ function StrikesPopup({
   return (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
       onClick={handleClose}
     >
       <div
         ref={cardRef}
         className="relative w-full max-w-sm"
+        style={{ willChange: "transform, opacity" }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Corner ornaments */}
@@ -89,7 +90,7 @@ function StrikesPopup({
         </button>
 
         {/* Card */}
-        <div className="relative flex flex-col overflow-hidden rounded-xl border border-[#c0392b]/30 bg-[#0d1a0f] p-6 shadow-[0_0_60px_rgba(0,0,0,0.8)]">
+        <div className="relative flex flex-col rounded-xl border border-[#c0392b]/30 bg-[#0d1a0f] p-6 shadow-[0_8px_24px_rgba(0,0,0,0.9)]">
           {/* Radial glow */}
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(192,57,43,0.05)_0%,transparent_70%)]" />
           <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-32 h-px bg-gradient-to-r from-transparent via-[#c0392b]/40 to-transparent" />
@@ -195,36 +196,25 @@ export default function StrikesCard({ strikes, blocked = false, strikeDetails = 
               <motion.div
                 key={i}
                 initial={{ scale: 0, opacity: 0 }}
-                animate={
-                  isActive
-                    ? {
-                        scale: 1,
-                        opacity: 1,
-                        boxShadow: [
-                          "0 0 0px rgba(192,57,43,0)",
-                          "0 0 10px rgba(192,57,43,0.6)",
-                          "0 0 0px rgba(192,57,43,0)",
-                        ],
-                      }
-                    : { scale: 1, opacity: 1 }
-                }
+                animate={{ scale: 1, opacity: 1 }}
                 transition={
                   isActive
-                    ? {
-                        scale: { delay: i * 0.1, type: "spring", stiffness: 380, damping: 14 },
-                        boxShadow: { duration: 1.8, repeat: Infinity, ease: "easeInOut", delay: i * 0.2 },
-                      }
-                    : {
-                        scale: { delay: i * 0.1, duration: 0.3 },
-                        opacity: { delay: i * 0.1, duration: 0.3 },
-                      }
+                    ? { scale: { delay: i * 0.1, type: "spring", stiffness: 380, damping: 14 } }
+                    : { scale: { delay: i * 0.1, duration: 0.3 }, opacity: { delay: i * 0.1, duration: 0.3 } }
                 }
-                className={`flex h-14 flex-1 items-center justify-center rounded-lg border text-base font-bold ${
+                className={`relative flex h-14 flex-1 items-center justify-center rounded-lg border text-base font-bold ${
                   isActive
                     ? "border-[#c0392b] bg-[#c0392b]/20 text-[#c0392b]"
                     : "border-[#1e3320] bg-[#0d1a0f]/60 text-[#1e3320]"
                 }`}
               >
+                {isActive && (
+                  <motion.span
+                    className="pointer-events-none absolute inset-0 rounded-lg bg-[#c0392b]/30"
+                    animate={{ opacity: [0, 0.7, 0] }}
+                    transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut", delay: i * 0.2 }}
+                  />
+                )}
                 ✕
               </motion.div>
             );

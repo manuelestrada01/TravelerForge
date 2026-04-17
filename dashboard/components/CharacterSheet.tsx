@@ -178,8 +178,8 @@ export default function CharacterSheet({
   return (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/82 p-4"
-      style={{ backdropFilter: "blur(2px)" }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ backgroundColor: "rgba(0,0,0,0.82)" }}
       onClick={handleClose}
     >
       <div

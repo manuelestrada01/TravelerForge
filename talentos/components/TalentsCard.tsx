@@ -61,7 +61,6 @@ function TalentPopup({ talent, onClose }: { talent: Talent; onClose: () => void 
     <div
       ref={overlayRef}
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
-      style={{ backdropFilter: "blur(2px)" }}
       onClick={handleClose}
     >
       <div ref={cardRef} className="relative w-full max-w-sm" onClick={(e) => e.stopPropagation()}>
@@ -142,13 +141,12 @@ export default function TalentsCard({ talents }: TalentsCardProps) {
 
     if (!mountedRef.current) {
       mountedRef.current = true;
-      const icons = Array.from(listRef.current?.querySelectorAll("[data-talent-icon]") ?? []);
-      if (icons.length) {
+      const flashes = Array.from(listRef.current?.querySelectorAll("[data-talent-flash]") ?? []);
+      if (flashes.length) {
         gsap.timeline({ delay: 0.3 })
-          .fromTo(icons,
-            { background: "rgba(160,125,55,0.08)" },
-            { background: "rgba(210,148,24,0.28)", stagger: 0.05, duration: 0.15,
-              yoyo: true, repeat: 1, ease: "power2.in" }
+          .fromTo(flashes,
+            { opacity: 0 },
+            { opacity: 1, stagger: 0.05, duration: 0.15, yoyo: true, repeat: 1, ease: "power2.in" }
           );
       }
     }
@@ -221,10 +219,15 @@ export default function TalentsCard({ talents }: TalentsCardProps) {
                 >
                   <div
                     data-talent-icon
-                    className="flex h-8 w-8 flex-shrink-0 items-center justify-center bg-[rgba(160,125,55,0.08)] border border-[rgba(160,125,55,0.25)] group-hover:bg-[rgba(160,125,55,0.14)] group-hover:border-[rgba(160,125,55,0.4)] transition-colors"
+                    className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center bg-[rgba(160,125,55,0.08)] border border-[rgba(160,125,55,0.25)] group-hover:bg-[rgba(160,125,55,0.14)] group-hover:border-[rgba(160,125,55,0.4)] transition-colors overflow-hidden"
                     style={{ clipPath: "polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)" }}
                   >
-                    <Icon size={13} className="text-[#c8a84b]" strokeWidth={1.4} />
+                    <span
+                      data-talent-flash
+                      className="pointer-events-none absolute inset-0 bg-[rgba(210,148,24,0.35)]"
+                      style={{ opacity: 0 }}
+                    />
+                    <Icon size={13} className="relative text-[#c8a84b]" strokeWidth={1.4} />
                   </div>
 
                   <div className="flex-1 min-w-0">
